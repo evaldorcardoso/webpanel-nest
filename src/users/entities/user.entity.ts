@@ -21,6 +21,9 @@ export class User extends BaseEntity {
   @Column({ nullable: false, type: 'varchar', length: 100 })
   name: string;
 
+  @Column({ nullable: false, type: 'varchar', length: 20 })
+  role: string;
+
   @Column({ nullable: false, default: true })
   isActive: boolean;
 
