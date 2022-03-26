@@ -1,18 +1,41 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BaseEntity,
+} from 'typeorm';
 
-export type UserDocument = User & Document;
+@Entity()
+export class User extends BaseEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-@Schema()
-export class User {
-  @Prop()
-  name: string;
-
-  @Prop()
+  @Column({ nullable: false, type: 'varchar', length: 100 })
   email: string;
 
-  @Prop()
+  @Column({ nullable: false })
   password: string;
-}
 
-export const UserSchema = SchemaFactory.createForClass(User);
+  @Column({ nullable: false, type: 'varchar', length: 100 })
+  name: string;
+
+  @Column({ nullable: false, default: true })
+  isActive: boolean;
+
+  @Column({ nullable: false })
+  salt: string;
+
+  @Column({ nullable: true, type: 'varchar', length: 64 })
+  confirmationToken: string;
+
+  @Column({ nullable: true, type: 'varchar', length: 64 })
+  recoverToken: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}

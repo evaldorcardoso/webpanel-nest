@@ -1,17 +1,22 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
-import { ItemsModule } from './items/items.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { getConnectionOptions } from 'typeorm';
+import { Connection } from 'typeorm';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb+srv://webpanel-nest:pcUBOEatn1bDvkm3@cluster0.hp7fa.mongodb.net/test',
-    ),
+    TypeOrmModule.forRootAsync({
+      useFactory: async () =>
+        Object.assign(await getConnectionOptions(), {
+          autoLoadEntities: true,
+        }),
+    }),
     UsersModule,
-    ItemsModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private connection: Connection) {}
+}
