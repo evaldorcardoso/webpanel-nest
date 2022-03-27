@@ -15,7 +15,7 @@ export class User extends BaseEntity {
   @Column({ nullable: false, type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'varchar', length: 100 })
   password: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
@@ -27,7 +27,7 @@ export class User extends BaseEntity {
   @Column({ nullable: false, default: true })
   isActive: boolean;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, type: 'varchar', length: 100 })
   salt: string;
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
