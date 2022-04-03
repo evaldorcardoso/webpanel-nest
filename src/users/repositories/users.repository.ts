@@ -77,6 +77,14 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  async changePassword(uuid: string, password: string) {
+    const user = await this.findOne({ uuid });
+    user.salt = await bcrypt.genSalt();
+    user.password = await this.hashPassword(password, user.salt);
+    user.recover_token = null;
+    await user.save();
+  }
+
   async checkCredentials(CredentialsDto: CredentialsDto): Promise<User> {
     const { email, password } = CredentialsDto;
     const user = await this.findOne({ email, is_active: true });
