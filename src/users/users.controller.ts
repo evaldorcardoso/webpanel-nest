@@ -7,17 +7,24 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ReturnUserDto } from './dto/return-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Role } from 'src/auth/role.decorator';
+import { UserRole } from './user-roles.enum';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Role(UserRole.ADMIN)
+  @UseGuards(AuthGuard(), RolesGuard)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
