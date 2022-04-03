@@ -5,12 +5,14 @@ import {
   Param,
   Patch,
   Post,
+  UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
+import { UserRole } from 'src/users/user-roles.enum';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';
@@ -59,6 +61,24 @@ export class AuthController {
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
   ): Promise<{ message: string }> {
     await this.authService.resetPassword(token, changePasswordDto);
+    return {
+      message: 'Senha alterada com sucesso',
+    };
+  }
+
+  @Patch(':uuid/change-password')
+  @UseGuards(AuthGuard())
+  async changePassword(
+    @Param('uuid') uuid: string,
+    @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
+    @GetUser() user: User,
+  ) {
+    if (user.role !== UserRole.ADMIN && user.uuid.toString() !== uuid)
+      throw new UnauthorizedException(
+        'Você não tem permissão para realizar esta operação',
+      );
+
+    await this.authService.changePassword(uuid, changePasswordDto);
     return {
       message: 'Senha alterada com sucesso',
     };
