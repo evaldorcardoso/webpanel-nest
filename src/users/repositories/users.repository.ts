@@ -9,9 +9,43 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { CredentialsDto } from 'src/auth/dto/credentials.dto';
+import { FindUsersQueryDto } from '../dto/find-users-query.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  async findUsers(
+    queryDto: FindUsersQueryDto,
+  ): Promise<{ users: User[]; total: number }> {
+    queryDto.is_active =
+      queryDto.is_active === undefined ? true : queryDto.is_active;
+    queryDto.page = queryDto.page === undefined ? 1 : queryDto.page;
+    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
+
+    const { email, name, is_active, role } = queryDto;
+    const query = this.createQueryBuilder('user');
+    query.where('user.is_active = :is_active', { is_active });
+
+    if (email) {
+      query.andWhere('user.email LIKE :email', { email: `%${email}%` });
+    }
+
+    if (name) {
+      query.andWhere('user.name LIKE :name', { name: `%${name}%` });
+    }
+
+    if (role) {
+      query.andWhere('user.role = :role', { role });
+    }
+    query.skip((queryDto.page - 1) * queryDto.limit);
+    query.take(+queryDto.limit);
+    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    query.select(['user.name', 'user.email', 'user.role', 'user.is_active']);
+
+    const [users, total] = await query.getManyAndCount();
+
+    return { users, total };
+  }
+
   async createUser(
     createUserDto: CreateUserDto,
     role: UserRole,
