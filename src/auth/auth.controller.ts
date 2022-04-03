@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -30,6 +32,14 @@ export class AuthController {
     @Body(ValidationPipe) credentialsDto: CredentialsDto,
   ): Promise<{ token: string }> {
     return await this.authService.signIn(credentialsDto);
+  }
+
+  @Patch(':token')
+  async confirmEmail(@Param('token') token: string) {
+    const user = await this.authService.confirmEmail(token);
+    return {
+      message: 'Email confirmado com sucesso',
+    };
   }
 
   @Get('/me')

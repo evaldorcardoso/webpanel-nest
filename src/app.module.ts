@@ -8,6 +8,8 @@ import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './configs/winston.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerInterceptor } from './interceptors/logger.interceptor';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { mailerConfig } from './configs/mailer.config';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
         }),
     }),
     WinstonModule.forRoot(winstonConfig),
+    MailerModule.forRoot(mailerConfig),
     UsersModule,
     AuthModule,
   ],

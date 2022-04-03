@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class LoggerInterceptor implements NestInterceptor {
   constructor(@Inject('winston') private readonly logger) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    this.logger(context.switchToHttp().getRequest());
+    this.log(context.switchToHttp().getRequest());
     return next.handle();
   }
 
