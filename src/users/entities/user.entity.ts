@@ -6,14 +6,19 @@ import {
   UpdateDateColumn,
   BaseEntity,
   Unique,
+  Generated,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Entity()
 @Unique(['email'])
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column()
+  @Generated('uuid')
+  uuid: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   email: string;
@@ -28,22 +33,22 @@ export class User extends BaseEntity {
   role: string;
 
   @Column({ nullable: false, default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   salt: string;
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
-  confirmationToken: string;
+  confirmation_token: string;
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
-  recoverToken: string;
+  recover_token: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

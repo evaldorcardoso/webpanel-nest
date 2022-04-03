@@ -22,8 +22,8 @@ export class UserRepository extends Repository<User> {
     user.email = email;
     user.name = name;
     user.role = role;
-    user.isActive = true;
-    user.confirmationToken = crypto.randomBytes(32).toString('hex');
+    user.is_active = true;
+    user.confirmation_token = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
 
@@ -45,7 +45,7 @@ export class UserRepository extends Repository<User> {
 
   async checkCredentials(CredentialsDto: CredentialsDto): Promise<User> {
     const { email, password } = CredentialsDto;
-    const user = await this.findOne({ email, isActive: true });
+    const user = await this.findOne({ email, is_active: true });
 
     if (user && (await user.checkPassword(password))) {
       return user;
