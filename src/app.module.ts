@@ -11,6 +11,7 @@ import { LoggerInterceptor } from './interceptors/logger.interceptor';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { mailerConfig } from './configs/mailer.config';
 import { CompaniesModule } from './companies/companies.module';
+import { FinancialsModule } from './financials/financials.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { CompaniesModule } from './companies/companies.module';
     UsersModule,
     AuthModule,
     CompaniesModule,
+    FinancialsModule,
   ],
   controllers: [],
   providers: [

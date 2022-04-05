@@ -11,7 +11,6 @@ import {
   JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { type } from 'os';
 import { Company } from 'src/companies/entities/company.entity';
 
 @Entity()
