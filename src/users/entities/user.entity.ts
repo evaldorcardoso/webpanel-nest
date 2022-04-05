@@ -7,8 +7,12 @@ import {
   BaseEntity,
   Unique,
   Generated,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { type } from 'os';
+import { Company } from 'src/companies/entities/company.entity';
 
 @Entity()
 @Unique(['email'])
@@ -19,6 +23,10 @@ export class User extends BaseEntity {
   @Column()
   @Generated('uuid')
   uuid: string;
+
+  @ManyToMany((type) => Company)
+  @JoinTable()
+  has: Company;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   email: string;
