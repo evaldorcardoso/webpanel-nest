@@ -20,6 +20,7 @@ export class UserRepository extends Repository<User> {
       queryDto.is_active === undefined ? true : queryDto.is_active;
     queryDto.page = queryDto.page === undefined ? 1 : queryDto.page;
     queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
+    queryDto.limit = queryDto.limit === undefined ? 100 : queryDto.limit;
 
     const { email, name, is_active, role } = queryDto;
     const query = this.createQueryBuilder('user');

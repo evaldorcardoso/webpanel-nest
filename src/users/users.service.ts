@@ -39,12 +39,11 @@ export class UsersService {
 
   async updateUser(updateUserDto: UpdateUserDto, uuid: string) {
     const result = await this.userRepository.update({ uuid }, updateUserDto);
-    if (result.affected > 0) {
-      const user = await this.findUserByUuid(uuid);
-      return user;
-    } else {
+    if (result.affected === 0) {
       throw new NotFoundException('Usuário não encontrado');
     }
+    const user = await this.findUserByUuid(uuid);
+    return user;
   }
 
   async deleteUser(userUuid: string) {
