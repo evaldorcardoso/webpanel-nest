@@ -14,6 +14,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { randomBytes } from 'crypto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
     private userRepository: UserRepository,
     private JwtService: JwtService,
     private mailerService: MailerService,
+    private configService: ConfigService,
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
@@ -35,7 +37,7 @@ export class AuthService {
     );
     const mail = {
       to: user.email,
-      from: 'suporte@evaldorc.com.br',
+      from: this.configService.get('MAILER_FROM'),
       subject: 'Confirmação de cadastro',
       template: 'email-confirmation',
       context: {
