@@ -8,7 +8,14 @@ import {
   Delete,
   ValidationPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { Role } from 'src/auth/role.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { User } from 'src/users/entities/user.entity';
+import { UserRole } from 'src/users/user-roles.enum';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { FindCompaniesQueryDto } from './dto/find-companies-query.dto';
@@ -16,14 +23,20 @@ import { ReturnCompanyDto } from './dto/return-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Controller('companies')
+@UseGuards(AuthGuard(), RolesGuard)
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
   @Post()
+  @Role(UserRole.ADMIN)
   async create(
     @Body(ValidationPipe) createCompanyDto: CreateCompanyDto,
+    @GetUser() user: User,
   ): Promise<ReturnCompanyDto> {
-    const company = await this.companiesService.create(createCompanyDto);
+    const company = await this.companiesService.create(
+      user.id,
+      createCompanyDto,
+    );
     return {
       company,
       message: 'Empresa criada com sucesso',

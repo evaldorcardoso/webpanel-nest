@@ -13,8 +13,8 @@ export class CompaniesService {
     private companyRepository: CompanyRepository,
   ) {}
 
-  create(createCompanyDto: CreateCompanyDto): Promise<Company> {
-    return this.companyRepository.createCompany(createCompanyDto);
+  create(user_id, createCompanyDto: CreateCompanyDto): Promise<Company> {
+    return this.companyRepository.createCompany(user_id, createCompanyDto);
   }
 
   async findCompanies(

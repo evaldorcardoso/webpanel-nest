@@ -2,6 +2,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { FindCompaniesQueryDto } from '../dto/find-companies-query.dto';
@@ -32,16 +33,21 @@ export class CompanyRepository extends Repository<Company> {
     return { companies, total };
   }
 
-  async createCompany(createCompanyDto: CreateCompanyDto): Promise<Company> {
+  async createCompany(
+    user_id,
+    createCompanyDto: CreateCompanyDto,
+  ): Promise<Company> {
     const { name } = createCompanyDto;
 
+    const user = await User.findOne({ where: { id: user_id } });
     const company = this.create();
     company.name = name;
+    company.has = [user];
 
     try {
       await company.save();
     } catch (error) {
-      if (error.code === 'ERR_DUP_ENTRY') {
+      if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('Empresa já cadastrada');
       } else {
         throw new InternalServerErrorException(

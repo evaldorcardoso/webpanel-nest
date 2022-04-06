@@ -17,12 +17,16 @@ import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';
 import { GetUser } from './get-user.decorator';
+import { Role } from './role.decorator';
+import { RolesGuard } from './roles.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @UseGuards(AuthGuard(), RolesGuard)
+  @Role(UserRole.ADMIN)
   async signUp(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<{ message: string }> {
