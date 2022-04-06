@@ -40,7 +40,13 @@ export class UserRepository extends Repository<User> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['user.name', 'user.email', 'user.role', 'user.is_active']);
+    query.select([
+      'user.uuid',
+      'user.name',
+      'user.email',
+      'user.role',
+      'user.is_active',
+    ]);
 
     const [users, total] = await query.getManyAndCount();
 
@@ -57,7 +63,7 @@ export class UserRepository extends Repository<User> {
     user.email = email;
     user.name = name;
     user.role = role;
-    user.is_active = true;
+    user.is_active = false;
     user.confirmation_token = crypto.randomBytes(32).toString('hex');
     user.salt = await bcrypt.genSalt();
     user.password = await this.hashPassword(password, user.salt);
@@ -88,7 +94,7 @@ export class UserRepository extends Repository<User> {
 
   async checkCredentials(CredentialsDto: CredentialsDto): Promise<User> {
     const { email, password } = CredentialsDto;
-    const user = await this.findOne({ email, is_active: true });
+    const user = await this.findOne({ email });
 
     if (user && (await user.checkPassword(password))) {
       return user;

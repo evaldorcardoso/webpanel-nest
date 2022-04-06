@@ -42,8 +42,8 @@ export class UsersController {
 
   @Get(':uuid')
   @Role(UserRole.ADMIN)
-  async findUserByUuid(@Param('uuid') id): Promise<ReturnUserDto> {
-    const user = await this.usersService.findUserByUuid(id);
+  async findUserByUuid(@Param('uuid') uuid): Promise<ReturnUserDto> {
+    const user = await this.usersService.findUserByUuid(uuid);
     return {
       user,
       message: 'Usuário encontrado com sucesso',

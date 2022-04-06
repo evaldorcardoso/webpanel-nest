@@ -27,23 +27,23 @@ export class AuthService {
   async signUp(createUserDto: CreateUserDto): Promise<User> {
     if (createUserDto.password !== createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('Senhas não conferem');
-    } else {
-      const user = await this.userRepository.createUser(
-        createUserDto,
-        UserRole.USER,
-      );
-      const mail = {
-        to: user.email,
-        from: 'suporte@evaldorc.com.br',
-        subject: 'Confirmação de cadastro',
-        template: 'email-confirmation',
-        context: {
-          token: user.confirmation_token,
-        },
-      };
-      await this.mailerService.sendMail(mail);
-      return user;
     }
+
+    const user = await this.userRepository.createUser(
+      createUserDto,
+      UserRole.USER,
+    );
+    const mail = {
+      to: user.email,
+      from: 'suporte@evaldorc.com.br',
+      subject: 'Confirmação de cadastro',
+      template: 'email-confirmation',
+      context: {
+        token: user.confirmation_token,
+      },
+    };
+    await this.mailerService.sendMail(mail);
+    return user;
   }
 
   async signIn(credentialsDto: CredentialsDto) {
@@ -53,8 +53,12 @@ export class AuthService {
       throw new UnauthorizedException('Usuário ou senha inválidos');
     }
 
+    if (!user.is_active) {
+      throw new UnauthorizedException('Usuário inativo');
+    }
+
     const jwtPayload = {
-      id: user.id,
+      uuid: user.uuid,
     };
     const token = await this.JwtService.sign(jwtPayload);
 
@@ -64,7 +68,7 @@ export class AuthService {
   async confirmEmail(confirmation_token: string): Promise<void> {
     const result = await this.userRepository.update(
       { confirmation_token },
-      { confirmation_token: null },
+      { confirmation_token: null, is_active: true },
     );
     if (result.affected === 0) {
       throw new NotFoundException('Token inválido');

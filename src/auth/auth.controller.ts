@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { ReturnUserDto } from 'src/users/dto/return-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UserRole } from 'src/users/user-roles.enum';
 import { AuthService } from './auth.service';
@@ -91,6 +92,7 @@ export class AuthController {
   @Get('/me')
   @UseGuards(AuthGuard())
   getMe(@GetUser() user: User): User {
+    delete user.id;
     return user;
   }
 }

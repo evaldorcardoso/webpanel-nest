@@ -27,10 +27,13 @@ export class UsersService {
     }
   }
 
-  async findUserByUuid(userUuid: string): Promise<User> {
-    const user = await this.userRepository.findOne(userUuid, {
-      select: ['email', 'name', 'role', 'uuid'],
-    });
+  async findUserByUuid(uuid: string): Promise<User> {
+    const user = await this.userRepository.findOne(
+      { uuid },
+      {
+        select: ['email', 'name', 'role', 'uuid'],
+      },
+    );
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
