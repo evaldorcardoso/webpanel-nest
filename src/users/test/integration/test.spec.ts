@@ -1,4 +1,3 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
