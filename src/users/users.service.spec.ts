@@ -79,9 +79,12 @@ describe('UsersService', () => {
 
       const result = await service.findUserByUuid('mockUuid');
       const select = ['email', 'name', 'role', 'uuid'];
-      expect(userRepository.findOne).toHaveBeenCalledWith('mockUuid', {
-        select,
-      });
+      expect(userRepository.findOne).toHaveBeenCalledWith(
+        { uuid: 'mockUuid' },
+        {
+          select,
+        },
+      );
       expect(result).toEqual('mockUser');
     });
 
