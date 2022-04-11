@@ -1,12 +1,15 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppModule } from 'src/app.module';
+import { AuthModule } from 'src/auth/auth.module';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/repositories/users.repository';
 import { UserRole } from 'src/users/user-roles.enum';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { mailerConfig } from 'src/configs/mailer.config';
 import * as request from 'supertest';
 
 describe('UserController (e2e)', () => {
@@ -22,7 +25,8 @@ describe('UserController (e2e)', () => {
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        AppModule,
+        ConfigModule.forRoot({ isGlobal: true }),
+        MailerModule.forRoot(mailerConfig),
         UsersModule,
         TypeOrmModule.forRoot({
           type: 'sqlite',
@@ -32,6 +36,7 @@ describe('UserController (e2e)', () => {
           synchronize: true,
         }),
         TypeOrmModule.forFeature([UserRepository]),
+        AuthModule,
       ],
     }).compile();
 
@@ -127,6 +132,71 @@ describe('UserController (e2e)', () => {
           passwordConfirmation: '@321Abc',
         })
         .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should be able to get a user by uuid with an authenticated admin user', async () => {
+      const user = await userRepository.findOne({ email: 'admin@email.com' });
+
+      await request(app.getHttpServer())
+        .get(`/users/${user.uuid}`)
+        .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+        .accept('application/json')
+        .send()
+        .expect(HttpStatus.OK)
+        .then((res) => {
+          expect(res.body.user).toMatchObject({
+            email: 'admin@email.com',
+            name: 'NAME',
+            role: 'ADMIN',
+            uuid: user.uuid,
+          });
+        });
+    });
+
+    it('should be able to get a list of users with an authenticated admin user', async () => {
+      await request(app.getHttpServer())
+        .get('/users')
+        .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+        .accept('application/json')
+        .send()
+        .expect(HttpStatus.OK)
+        .then((res) => {
+          expect(res.body.users).toHaveLength(2);
+          expect(res.body.total).toBe(2);
+          expect(res.body.users[0]).toMatchObject({
+            email: 'admin@email.com',
+          });
+          expect(res.body.users[1]).toMatchObject({
+            email: 'user@email.com',
+          });
+        });
+    });
+
+    it('should be able to update an admin user with an authenticated admin user', async () => {
+      const user = await userRepository.findOne({ email: 'admin@email.com' });
+
+      await request(app.getHttpServer())
+        .patch(`/users/${user.uuid}`)
+        .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+        .accept('application/json')
+        .send({
+          name: 'Admin Alterado',
+        })
+        .expect(HttpStatus.OK)
+        .then((res) => {
+          expect(res.body.name).toEqual('Admin Alterado');
+        });
+    });
+
+    it('should be able to delete a user by uuid with an authenticated admin user', async () => {
+      const user = await userRepository.findOne({ email: 'user@email.com' });
+
+      await request(app.getHttpServer())
+        .delete(`/users/${user.uuid}`)
+        .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+        .accept('application/json')
+        .send()
+        .expect(HttpStatus.OK);
     });
   });
 });

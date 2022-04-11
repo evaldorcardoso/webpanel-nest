@@ -50,7 +50,7 @@ export class UsersController {
     };
   }
 
-  @Patch('uuid')
+  @Patch(':uuid')
   async updateUser(
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @GetUser() user: User,
@@ -65,7 +65,7 @@ export class UsersController {
     }
   }
 
-  @Delete('uuid')
+  @Delete(':uuid')
   @Role(UserRole.ADMIN)
   async deleteUser(@Param('uuid') uuid: string) {
     await this.usersService.deleteUser(uuid);
@@ -77,9 +77,11 @@ export class UsersController {
   @Get()
   @Role(UserRole.ADMIN)
   async findUsers(@Query() query: FindUsersQueryDto) {
-    const found = await this.usersService.findUsers(query);
+    const data = await this.usersService.findUsers(query);
+
     return {
-      found,
+      users: data.users,
+      total: data.total,
       message: 'Usuários encontrados com sucesso',
     };
   }
