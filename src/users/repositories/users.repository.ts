@@ -13,6 +13,21 @@ import { FindUsersQueryDto } from '../dto/find-users-query.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  async listUsers(): Promise<{ users: User[]; total: number }> {
+    const query = this.createQueryBuilder('user');
+    query.select([
+      'user.uuid',
+      'user.name',
+      'user.email',
+      'user.role',
+      'user.is_active',
+    ]);
+
+    const [users, total] = await query.getManyAndCount();
+
+    return { users, total };
+  }
+
   async findUsers(
     queryDto: FindUsersQueryDto,
   ): Promise<{ users: User[]; total: number }> {
