@@ -11,6 +11,7 @@ export const mailerConfig: MailerOptions = {
       layoutsDir: path.resolve(__dirname, '..', '..', 'templates'),
     },
   },
+  preview: true,
   transport: {
     host: 'smtp.hostinger.com',
     secure: false,
