@@ -49,6 +49,7 @@ export class CompaniesController {
   }
 
   @Get()
+  @Role(UserRole.ADMIN)
   async findCompanies(@Query() query: FindCompaniesQueryDto) {
     const found = await this.companiesService.findCompanies(query);
     const message =
@@ -62,6 +63,7 @@ export class CompaniesController {
   }
 
   @Patch(':uuid')
+  @Role(UserRole.ADMIN)
   update(
     @Param('uuid') uuid: string,
     @Body(ValidationPipe) updateCompanyDto: UpdateCompanyDto,
@@ -70,6 +72,7 @@ export class CompaniesController {
   }
 
   @Delete(':uuid')
+  @Role(UserRole.ADMIN)
   async delete(@Param('uuid') uuid: string) {
     await this.companiesService.delete(uuid);
     return {

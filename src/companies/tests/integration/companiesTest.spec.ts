@@ -111,7 +111,7 @@ afterEach(async () => {
 });
 
 describe('Companies CRUD', () => {
-  it('should be able to create a Company  an authenticated admin user', async () => {
+  it('should be able to create a Company with an authenticated admin user', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
 
     await request(app.getHttpServer())
@@ -141,6 +141,27 @@ describe('Companies CRUD', () => {
         name: company.name,
       })
       .expect(HttpStatus.CONFLICT);
+  });
+
+  it('should not be able to create a Company with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+
+    await request(app.getHttpServer())
+      .post('/companies')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .send({
+        name: 'Company 1',
+      })
+      .expect(HttpStatus.FORBIDDEN);
+  });
+
+  it('should not be able to create a Company without authentication', async () => {
+    await request(app.getHttpServer())
+      .post('/companies')
+      .send({
+        name: 'Company 1',
+      })
+      .expect(HttpStatus.UNAUTHORIZED);
   });
 
   it('should be able to get a company by uuid with an authenticated admin user', async () => {
@@ -231,6 +252,25 @@ describe('Companies CRUD', () => {
       });
   });
 
+  it('should not be able to update a company with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+    const user = await userRepository.findOne({
+      where: {
+        email: 'user@email.com',
+      },
+    });
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company 1',
+    });
+
+    await request(app.getHttpServer())
+      .patch(`/companies/${company.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({ name: 'Company Altered' })
+      .expect(HttpStatus.FORBIDDEN);
+  });
+
   it('should not be able to update a company with an invalid uuid', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await userRepository.findOne({
@@ -289,6 +329,28 @@ describe('Companies CRUD', () => {
       .accept('application/json')
       .send()
       .expect(HttpStatus.NOT_FOUND);
+
+    company = await companyRepository.findOne(company.id);
+    expect(company).toBeTruthy();
+  });
+
+  it('should not be able to delete a company with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+    const user = await userRepository.findOne({
+      where: {
+        email: 'user@email.com',
+      },
+    });
+    let company = await companyRepository.createCompany(user.id, {
+      name: 'Company 1',
+    });
+
+    await request(app.getHttpServer())
+      .delete(`/companies/${company.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send()
+      .expect(HttpStatus.FORBIDDEN);
 
     company = await companyRepository.findOne(company.id);
     expect(company).toBeTruthy();
