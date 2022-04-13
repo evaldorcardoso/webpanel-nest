@@ -44,7 +44,7 @@ export class CompaniesController {
   }
 
   @Get(':uuid')
-  async findUserByUuid(@Param('uuid') uuid: string) {
+  async findCompanyByUuid(@Param('uuid') uuid: string) {
     return this.companiesService.findByUuid(uuid);
   }
 

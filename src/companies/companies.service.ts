@@ -4,7 +4,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { FindCompaniesQueryDto } from './dto/find-companies-query.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entity';
-import { CompanyRepository } from './respositories/companies.repository';
+import { CompanyRepository } from './repositories/companies.repository';
 
 @Injectable()
 export class CompaniesService {

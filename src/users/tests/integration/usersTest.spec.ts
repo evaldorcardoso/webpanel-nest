@@ -20,7 +20,7 @@ interface UserDto {
 }
 
 let userRepository: UserRepository;
-let jwtTokenAdmin: string;
+let jwtToken: string;
 let app: INestApplication;
 
 async function createAndAuthenticateUser(
@@ -110,10 +110,10 @@ afterEach(async () => {
 
 describe('Users CRUD', () => {
   it('should be able to create an admin user with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     await request(app.getHttpServer())
       .post('/users')
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send({
         email: 'admin2@admin.com.br',
@@ -125,10 +125,10 @@ describe('Users CRUD', () => {
   });
 
   it('should not be able to create an admin user with same email and an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     await request(app.getHttpServer())
       .post('/users')
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send({
         email: 'admin@email.com',
@@ -153,12 +153,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to get another user by uuid with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .get(`/users/${user.uuid}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK)
@@ -173,12 +173,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to get a list of users with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .get('/users')
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK)
@@ -195,12 +195,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to find users by email with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .get(`/users?email=${user.email}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK)
@@ -214,12 +214,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to find users by name with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .get(`/users?name=${user.name}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK)
@@ -233,12 +233,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to find users by role with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .get(`/users?role=${UserRole.ADMIN}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK)
@@ -252,12 +252,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to update an admin user with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await userRepository.findOne({ email: 'admin@email.com' });
 
     await request(app.getHttpServer())
       .patch(`/users/${user.uuid}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send({
         name: 'Admin Alterado',
@@ -269,7 +269,7 @@ describe('Users CRUD', () => {
   });
 
   it('should not be able to update a user with another authenticated normal user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.USER);
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
     const user = await createUser(UserRole.USER, true, {
       email: 'user2@email.com',
       name: 'User 2',
@@ -279,7 +279,7 @@ describe('Users CRUD', () => {
 
     await request(app.getHttpServer())
       .patch(`/users/${user.uuid}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send({
         name: 'User Alterado',
@@ -288,12 +288,12 @@ describe('Users CRUD', () => {
   });
 
   it('should be able to delete another user by uuid with an authenticated admin user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.ADMIN);
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     let user = await createUser(UserRole.USER);
 
     await request(app.getHttpServer())
       .delete(`/users/${user.uuid}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK);
@@ -303,7 +303,7 @@ describe('Users CRUD', () => {
   });
 
   it('should not be able to delete another user by uuid with an authenticated normal user', async () => {
-    jwtTokenAdmin = await createAndAuthenticateUser(UserRole.USER);
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
     let user = await createUser(UserRole.USER, true, {
       email: 'user2@email.com',
       name: 'User 2',
@@ -313,7 +313,7 @@ describe('Users CRUD', () => {
 
     await request(app.getHttpServer())
       .delete(`/users/${user.uuid}`)
-      .set('Authorization', `Bearer ${jwtTokenAdmin}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.FORBIDDEN);

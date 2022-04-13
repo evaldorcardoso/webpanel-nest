@@ -22,7 +22,6 @@ export class CompanyRepository extends Repository<Company> {
     if (name) {
       query.andWhere('company.name LIKE :name', { name: `%${name}%` });
     }
-    console.log(queryDto.limit);
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
@@ -47,7 +46,7 @@ export class CompanyRepository extends Repository<Company> {
     try {
       await company.save();
     } catch (error) {
-      if (error.code === 'ER_DUP_ENTRY') {
+      if (error.code === 'ER_DUP_ENTRY' || error.code === 'SQLITE_CONSTRAINT') {
         throw new ConflictException('Empresa já cadastrada');
       } else {
         throw new InternalServerErrorException(
