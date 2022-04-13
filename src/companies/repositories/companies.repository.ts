@@ -83,4 +83,28 @@ export class CompanyRepository extends Repository<Company> {
 
     return company;
   }
+
+  async linkUser(company_uuid, user_uuid) {
+    const company = await this.findOne(
+      { uuid: company_uuid },
+      { relations: ['has'] },
+    );
+    const user = await User.findOne({ where: { uuid: user_uuid } });
+
+    company.has.push(user);
+
+    try {
+      await company.save();
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY' || error.code === 'SQLITE_CONSTRAINT') {
+        throw new ConflictException('Usuário já vinculado a empresa');
+      } else {
+        throw new InternalServerErrorException(
+          'Erro ao vincular usuário no banco de dados',
+        );
+      }
+    }
+
+    return company;
+  }
 }

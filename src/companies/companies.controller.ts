@@ -60,6 +60,19 @@ export class CompaniesController {
     };
   }
 
+  @Get(':uuid/users/:userUuid')
+  @Role(UserRole.ADMIN)
+  async linkUserToCompany(
+    @Param('uuid') companyUuid: string,
+    @Param('userUuid') userUuid: string,
+  ): Promise<ReturnCompanyDto> {
+    const company = await this.companiesService.linkUser(companyUuid, userUuid);
+    return {
+      company,
+      message: 'Usuário vinculado com sucesso',
+    };
+  }
+
   @Get(':uuid')
   async findCompanyByUuid(@Param('uuid') uuid: string) {
     return this.companiesService.findByUuid(uuid);

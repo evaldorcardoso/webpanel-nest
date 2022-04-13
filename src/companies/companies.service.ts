@@ -55,6 +55,10 @@ export class CompaniesService {
     return company;
   }
 
+  async linkUser(company_uuid, user_uuid) {
+    return await this.companyRepository.linkUser(company_uuid, user_uuid);
+  }
+
   async delete(uuid: string) {
     const result = await this.companyRepository.delete({ uuid });
     if (result.affected === 0) {

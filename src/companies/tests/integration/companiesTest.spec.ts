@@ -34,15 +34,10 @@ async function createAndAuthenticateUser(
 ): Promise<string> {
   const user = await createUser(role, true, userData);
 
-  const response = await request(app.getHttpServer())
-    .post('/auth/signin')
-    .send({
-      email: user.email,
-      password: userData ? userData.password : DEFAULT_PASSWORD,
-    })
-    .expect(201);
-
-  return response.body.token;
+  return await authenticateUser(
+    user.email,
+    userData ? userData.password : DEFAULT_PASSWORD,
+  );
 }
 
 async function createUser(
@@ -76,6 +71,21 @@ async function createUser(
   }
 
   return await userRepository.findOne(user.id);
+}
+
+async function authenticateUser(
+  email: string,
+  password: string,
+): Promise<string> {
+  const response = await request(app.getHttpServer())
+    .post('/auth/signin')
+    .send({
+      email,
+      password,
+    })
+    .expect(201);
+
+  return response.body.token;
 }
 
 beforeAll(async () => {
@@ -187,6 +197,57 @@ describe('Companies CRUD', () => {
       .expect(HttpStatus.OK)
       .then((res) => {
         expect(res.body.name).toBe('Company 1');
+      });
+  });
+
+  it('should be able to link a company to another user with an authenticated admin user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      where: {
+        email: 'admin@email.com',
+      },
+    });
+    await companyRepository.createCompany(user.id, {
+      name: 'Company 1',
+    });
+
+    const anotherCompany = await companyRepository.createCompany(user.id, {
+      name: 'Company 2',
+    });
+
+    const anotherUser = await createUser(UserRole.USER);
+    const jwtTokenUser = await authenticateUser(
+      anotherUser.email,
+      DEFAULT_PASSWORD,
+    );
+
+    await request(app.getHttpServer())
+      .get('/companies/me')
+      .set('Authorization', `Bearer ${jwtTokenUser}`)
+      .accept('application/json')
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        expect(res.body.found.companies.length).toBe(0);
+      });
+
+    await request(app.getHttpServer())
+      .get(`/companies/${anotherCompany.uuid}/users/${anotherUser.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send()
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        expect(res.body.company.name).toBe(anotherCompany.name);
+      });
+
+    await request(app.getHttpServer())
+      .get('/companies/me')
+      .set('Authorization', `Bearer ${jwtTokenUser}`)
+      .accept('application/json')
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        expect(res.body.found.companies.length).toBe(1);
+        expect(res.body.found.companies[0].name).toBe(anotherCompany.name);
       });
   });
 
