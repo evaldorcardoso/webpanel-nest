@@ -24,6 +24,17 @@ export class CompaniesService {
     return companies;
   }
 
+  async findMyCompanies(
+    user_id,
+    queryDto: FindCompaniesQueryDto,
+  ): Promise<{ companies: Company[]; total: number }> {
+    const companies = await this.companyRepository.myCompanies(
+      user_id,
+      queryDto,
+    );
+    return companies;
+  }
+
   async findByUuid(uuid: string): Promise<Company> {
     const company = await this.companyRepository.findOne({ uuid });
     if (!company) {

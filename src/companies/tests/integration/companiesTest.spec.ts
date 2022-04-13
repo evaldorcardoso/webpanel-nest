@@ -13,6 +13,7 @@ import * as request from 'supertest';
 import { CompaniesModule } from 'src/companies/companies.module';
 import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { Company } from 'src/companies/entities/company.entity';
+import { FindCompaniesQueryDto } from 'src/companies/dto/find-companies-query.dto';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {
@@ -89,8 +90,9 @@ beforeAll(async () => {
         database: ':memory:',
         entities: [User, Company],
         synchronize: true,
+        logging: false,
       }),
-      TypeOrmModule.forFeature([CompanyRepository]),
+      TypeOrmModule.forFeature([UserRepository, CompanyRepository]),
       AuthModule,
     ],
   }).compile();
@@ -185,6 +187,39 @@ describe('Companies CRUD', () => {
       .expect(HttpStatus.OK)
       .then((res) => {
         expect(res.body.name).toBe('Company 1');
+      });
+  });
+
+  it('should be able to get a list of companies linked to the logged user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      where: {
+        email: 'admin@email.com',
+      },
+    });
+    const anotherUser = await createUser(UserRole.USER);
+
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company 1',
+    });
+
+    await companyRepository.createCompany(anotherUser.id, {
+      name: 'Company 2',
+    });
+
+    const anotherCompany2 = await companyRepository.createCompany(user.id, {
+      name: 'Company 3',
+    });
+
+    await request(app.getHttpServer())
+      .get('/companies/me')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        expect(res.body.found.companies.length).toBe(2);
+        expect(res.body.found.companies[0].name).toBe(company.name);
+        expect(res.body.found.companies[1].name).toBe(anotherCompany2.name);
       });
   });
 

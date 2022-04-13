@@ -43,6 +43,23 @@ export class CompaniesController {
     };
   }
 
+  @Get('/me')
+  @UseGuards(AuthGuard())
+  async findMyCompanies(
+    @Query() query: FindCompaniesQueryDto,
+    @GetUser() user: User,
+  ) {
+    const found = await this.companiesService.findMyCompanies(user.id, query);
+    const message =
+      found.total === 0
+        ? 'Nenhuma empresa encontrada'
+        : `${found.total} empresas encontradas`;
+    return {
+      found,
+      message,
+    };
+  }
+
   @Get(':uuid')
   async findCompanyByUuid(@Param('uuid') uuid: string) {
     return this.companiesService.findByUuid(uuid);

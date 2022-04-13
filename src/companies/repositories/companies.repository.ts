@@ -32,6 +32,32 @@ export class CompanyRepository extends Repository<Company> {
     return { companies, total };
   }
 
+  async myCompanies(
+    user_id: number,
+    queryDto: FindCompaniesQueryDto,
+  ): Promise<{ companies: Company[]; total: number }> {
+    queryDto.page = queryDto.page === undefined ? 1 : queryDto.page;
+    queryDto.limit = queryDto.limit > 100 ? 100 : queryDto.limit;
+    queryDto.limit = queryDto.limit === undefined ? 100 : queryDto.limit;
+
+    const { name } = queryDto;
+    const query = this.createQueryBuilder('company');
+    if (name) {
+      query.andWhere('company.name LIKE :name', { name: `%${name}%` });
+    }
+    query.skip((queryDto.page - 1) * queryDto.limit);
+    query.take(+queryDto.limit);
+    query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
+    query.select();
+    query
+      .innerJoin('company_has_user', 'chu', 'chu.companyId = company.id')
+      .andWhere('chu.userId = :user_id', { user_id });
+
+    const [companies, total] = await query.getManyAndCount();
+
+    return { companies, total };
+  }
+
   async createCompany(
     user_id,
     createCompanyDto: CreateCompanyDto,
