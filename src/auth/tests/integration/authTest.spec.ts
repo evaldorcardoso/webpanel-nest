@@ -1,17 +1,13 @@
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { mailerConfig } from 'src/configs/mailer.config';
 import { ConfigModule } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppModule } from 'src/app.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { AuthService } from 'src/auth/auth.service';
 import { Company } from 'src/companies/entities/company.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/repositories/users.repository';
 import { UsersModule } from 'src/users/users.module';
-import { UsersService } from 'src/users/users.service';
-import { FindUsersQueryDto } from 'src/users/dto/find-users-query.dto';
 import * as request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UserRole } from 'src/users/user-roles.enum';
@@ -22,9 +18,8 @@ const adminUser = {
   password: '@321Abc',
 };
 let userRepository: UserRepository;
-let authService: AuthService;
-let app: INestApplication;
 let jwtTokenAdmin: string;
+let app: INestApplication;
 
 async function createAndAuthenticateAdmin(): Promise<string> {
   const userAdmin = await userRepository.createUser(
@@ -70,7 +65,6 @@ beforeAll(async () => {
   app = moduleFixture.createNestApplication();
   await app.init();
   userRepository = moduleFixture.get(UserRepository);
-  authService = moduleFixture.get(AuthService);
 
   jest
     .spyOn(MailerService.prototype, 'sendMail')
@@ -229,7 +223,7 @@ describe('Auth Flow', () => {
     expect(userAfter).toBeUndefined();
   });
 
-  it('should be able to activate a normal user /auth', async () => {
+  it('should be able to activate a normal user with given token /auth', async () => {
     jwtTokenAdmin = await createAndAuthenticateAdmin();
     const user = {
       email: 'user@email.com.br',
