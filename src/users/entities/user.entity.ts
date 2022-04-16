@@ -7,8 +7,10 @@ import {
   BaseEntity,
   Unique,
   Generated,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Financial } from 'src/financials/entities/financial.entity';
 
 @Entity()
 @Unique(['email'])
@@ -49,6 +51,9 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Financial, (financial) => financial.user)
+  financials: User[];
 
   async checkPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

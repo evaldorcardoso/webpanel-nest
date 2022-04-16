@@ -107,4 +107,15 @@ export class CompanyRepository extends Repository<Company> {
 
     return company;
   }
+
+  async isOwnedByUser(user_id, company_uuid): Promise<boolean> {
+    const result = await this.findOne({
+      relations: ['has'],
+      where: {
+        uuid: company_uuid,
+      },
+    });
+
+    return result.has.some((user) => user.id === user_id);
+  }
 }

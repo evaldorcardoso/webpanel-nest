@@ -1,11 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CompanyRepository } from 'src/companies/repositories/companies.repository';
+import { UserRole } from 'src/users/user-roles.enum';
 import { CreateFinancialDto } from './dto/create-financial.dto';
 import { UpdateFinancialDto } from './dto/update-financial.dto';
+import { FinancialRepository } from './repositories/financial.repository';
 
 @Injectable()
 export class FinancialsService {
-  create(createFinancialDto: CreateFinancialDto) {
-    return 'This action adds a new financial';
+  constructor(
+    @InjectRepository(FinancialRepository)
+    @InjectRepository(CompanyRepository)
+    private readonly financialRepository: FinancialRepository,
+    private readonly companyRepository: CompanyRepository,
+  ) {}
+
+  async create(user, createFinancialDto: CreateFinancialDto) {
+    if (
+      user.role !== UserRole.ADMIN &&
+      !(await this.companyRepository.isOwnedByUser(
+        user.id,
+        createFinancialDto.company,
+      ))
+    ) {
+      throw new ForbiddenException();
+    }
+
+    return await this.financialRepository.createFinancial(
+      user.id,
+      createFinancialDto,
+    );
   }
 
   findAll() {
@@ -16,11 +44,10 @@ export class FinancialsService {
     return `This action returns a #${id} financial`;
   }
 
-  update(id: number, updateFinancialDto: UpdateFinancialDto) {
-    return `This action updates a #${id} financial`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} financial`;
+  async remove(uuid: string) {
+    const result = await this.financialRepository.delete({ uuid });
+    if (result.affected === 0) {
+      throw new NotFoundException('Caixa não encontrado');
+    }
   }
 }

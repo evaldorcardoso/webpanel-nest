@@ -70,8 +70,6 @@ export class UserRepository extends Repository<User> {
 
     try {
       await user.save();
-      delete user.password;
-      delete user.salt;
       return user;
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY' || error.code === 'SQLITE_CONSTRAINT') {

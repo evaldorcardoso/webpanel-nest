@@ -10,6 +10,8 @@ import { UsersModule } from 'src/users/users.module';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { mailerConfig } from 'src/configs/mailer.config';
 import * as request from 'supertest';
+import { Financial } from 'src/financials/entities/financial.entity';
+import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {
@@ -82,11 +84,11 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User],
+        entities: [User, Financial],
         logging: false,
         synchronize: true,
       }),
-      TypeOrmModule.forFeature([UserRepository]),
+      TypeOrmModule.forFeature([UserRepository, FinancialRepository]),
       AuthModule,
     ],
   }).compile();
@@ -121,7 +123,10 @@ describe('Users CRUD', () => {
         password: '@321Abc',
         passwordConfirmation: '@321Abc',
       })
-      .expect(HttpStatus.CREATED);
+      .expect(HttpStatus.CREATED)
+      .then((response) => {
+        console.log(response.body);
+      });
   });
 
   it('should not be able to create an admin user with same email and an authenticated admin user', async () => {
@@ -163,7 +168,7 @@ describe('Users CRUD', () => {
       .send()
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.user).toMatchObject({
+        expect(res.body).toMatchObject({
           email: user.email,
           name: user.name,
           role: user.role,

@@ -32,22 +32,14 @@ export class UsersController {
   @Role(UserRole.ADMIN)
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
-  ): Promise<ReturnUserDto> {
-    const user = await this.usersService.createAdminUser(createUserDto);
-    return {
-      user,
-      message: 'Usuário administrador criado com sucesso',
-    };
+  ): Promise<User> {
+    return await this.usersService.createAdminUser(createUserDto);
   }
 
   @Get(':uuid')
   @Role(UserRole.ADMIN)
-  async findUserByUuid(@Param('uuid') uuid): Promise<ReturnUserDto> {
-    const user = await this.usersService.findUserByUuid(uuid);
-    return {
-      user,
-      message: 'Usuário encontrado com sucesso',
-    };
+  async findUserByUuid(@Param('uuid') uuid): Promise<User> {
+    return await this.usersService.findUserByUuid(uuid);
   }
 
   @Patch(':uuid')
