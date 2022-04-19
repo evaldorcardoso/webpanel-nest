@@ -14,6 +14,8 @@ import { CompaniesModule } from 'src/companies/companies.module';
 import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { Company } from 'src/companies/entities/company.entity';
 import { FindCompaniesQueryDto } from 'src/companies/dto/find-companies-query.dto';
+import { Financial } from 'src/financials/entities/financial.entity';
+import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {
@@ -98,11 +100,15 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User, Company],
+        entities: [User, Company, Financial],
         synchronize: true,
         logging: false,
       }),
-      TypeOrmModule.forFeature([UserRepository, CompanyRepository]),
+      TypeOrmModule.forFeature([
+        UserRepository,
+        CompanyRepository,
+        FinancialRepository,
+      ]),
       AuthModule,
     ],
   }).compile();
