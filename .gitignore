@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /database
+/database_tests
 
 # Logs
 logs

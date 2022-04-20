@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Financial } from 'src/financials/entities/financial.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 @Unique(['email'])
@@ -20,21 +21,26 @@ export class User extends BaseEntity {
 
   @Column()
   @Generated('uuid')
+  @ApiProperty()
   uuid: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
+  @ApiProperty()
   email: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   password: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
+  @ApiProperty()
   name: string;
 
   @Column({ nullable: false, type: 'varchar', length: 20 })
+  @ApiProperty()
   role: string;
 
   @Column({ nullable: false, default: true })
+  @ApiProperty()
   is_active: boolean;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
@@ -47,9 +53,11 @@ export class User extends BaseEntity {
   recover_token: string;
 
   @CreateDateColumn()
+  @ApiProperty()
   created_at: Date;
 
   @UpdateDateColumn()
+  @ApiProperty()
   updated_at: Date;
 
   @OneToMany(() => Financial, (financial) => financial.user)
