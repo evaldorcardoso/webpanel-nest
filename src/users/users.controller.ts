@@ -22,6 +22,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from './entities/user.entity';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { ApiOkResponse, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
@@ -38,6 +39,10 @@ export class UsersController {
 
   @Get(':uuid')
   @Role(UserRole.ADMIN)
+  @ApiOkResponse({
+    description: 'Usuário encontrado com sucesso',
+    type: User,
+  })
   async findUserByUuid(@Param('uuid') uuid): Promise<User> {
     return await this.usersService.findUserByUuid(uuid);
   }

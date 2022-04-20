@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class CreateCompanyDto {
+  @ApiProperty()
   @IsNotEmpty({
     message: 'Informe o nome da empresa',
   })
