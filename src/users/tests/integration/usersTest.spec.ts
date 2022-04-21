@@ -123,10 +123,7 @@ describe('Users CRUD', () => {
         password: '@321Abc',
         passwordConfirmation: '@321Abc',
       })
-      .expect(HttpStatus.CREATED)
-      .then((response) => {
-        console.log(response.body);
-      });
+      .expect(HttpStatus.CREATED);
   });
 
   it('should not be able to create an admin user with same email and an authenticated admin user', async () => {
@@ -290,6 +287,41 @@ describe('Users CRUD', () => {
         name: 'User Alterado',
       })
       .expect(HttpStatus.FORBIDDEN);
+  });
+
+  it('should not be able to update a user Role with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+    const user = await userRepository.findOne({
+      email: 'user@email.com',
+    });
+
+    await request(app.getHttpServer())
+      .patch(`/users/${user.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({
+        role: UserRole.ADMIN,
+      })
+      .expect(HttpStatus.FORBIDDEN);
+  });
+
+  it('should not be able to update an inactive user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      email: 'admin@email.com',
+    });
+    await userRepository.update(user.id, {
+      is_active: false,
+    });
+
+    await request(app.getHttpServer())
+      .patch(`/users/${user.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({
+        is_active: true,
+      })
+      .expect(HttpStatus.UNPROCESSABLE_ENTITY);
   });
 
   it('should be able to delete another user by uuid with an authenticated admin user', async () => {

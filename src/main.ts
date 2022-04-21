@@ -10,6 +10,14 @@ async function bootstrap() {
     .setTitle('WebPanel Fruteira API')
     .setDescription('API para acesso ao sistema da Fruteira')
     .setVersion('0.1')
+    .addBearerAuth({
+      description: 'Please enter token in following format: Bearer <JWT>',
+      name: 'Authorization',
+      bearerFormat: 'Bearer',
+      scheme: 'Bearer',
+      type: 'http',
+      in: 'Header',
+    })
     .build();
   const app = await NestFactory.create(AppModule);
   const document = SwaggerModule.createDocument(app, config);

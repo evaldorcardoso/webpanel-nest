@@ -1,25 +1,28 @@
-import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entities/user.entity';
 import { UserRole } from '../user-roles.enum';
 
 export class ReturnUserDto {
-  id: number;
-  email: string;
-  name: string;
-  role: UserRole;
-  is_active: boolean;
-  confirmation_token: string;
-  recover_token: string | null;
+  @ApiProperty()
   uuid: string;
-  created_at: Date;
-  updated_at: Date;
 
-  @Exclude()
-  password: string;
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty({ enum: UserRole })
+  role: UserRole;
+
+  @ApiProperty({ default: false })
+  is_active: boolean;
 
   constructor(user: User) {
-    this.id = user.id;
+    this.uuid = user.uuid;
     this.email = user.email;
     this.name = user.name;
+    this.role = UserRole[user.role];
+    this.is_active = user.is_active;
   }
 }

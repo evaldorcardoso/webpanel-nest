@@ -1,15 +1,16 @@
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { UserRole } from '../user-roles.enum';
-import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString({
     message: 'Informe um nome de usuário válido',
   })
   name: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsEmail(
     {},
@@ -19,9 +20,11 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   )
   email: string;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   role: UserRole;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   is_active: boolean;
 }

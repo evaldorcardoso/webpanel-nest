@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
 import { UserRole } from './user-roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { ReturnUserDto } from './dto/return-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,25 +20,29 @@ export class UsersService {
     private userRepository: UserRepository,
   ) {}
 
-  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+  async createAdminUser(createUserDto: CreateUserDto): Promise<ReturnUserDto> {
     if (createUserDto.password !== createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('As senhas não conferem');
     } else {
-      return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
+      const user = await this.userRepository.createUser(
+        createUserDto,
+        UserRole.ADMIN,
+      );
+      return new ReturnUserDto(user);
     }
   }
 
-  async findUserByUuid(uuid: string): Promise<User> {
+  async findUserByUuid(uuid: string): Promise<ReturnUserDto> {
     const user = await this.userRepository.findOne(
       { uuid },
       {
-        select: ['email', 'name', 'role', 'uuid'],
+        select: ['email', 'name', 'role', 'uuid', 'is_active'],
       },
     );
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
-    return user;
+    return new ReturnUserDto(user);
   }
 
   async updateUser(updateUserDto: UpdateUserDto, uuid: string) {
