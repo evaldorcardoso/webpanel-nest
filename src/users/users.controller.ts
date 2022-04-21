@@ -27,11 +27,12 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
 import { ReturnFindUsersDto } from './dto/return-find-users.dto';
-import { type } from 'os';
 
+@ApiBearerAuth()
+@ApiTags('Users')
 @Controller('users')
 @UseGuards(AuthGuard(), RolesGuard)
 export class UsersController {
@@ -41,7 +42,6 @@ export class UsersController {
   @Role(UserRole.ADMIN)
   @ApiOperation({ summary: 'Create a new Admin User' })
   @ApiOkResponse({ type: ReturnUserDto })
-  @ApiBearerAuth()
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
@@ -52,7 +52,6 @@ export class UsersController {
   @Role(UserRole.ADMIN)
   @ApiOperation({ summary: 'Get an user by uuid' })
   @ApiOkResponse({ type: ReturnUserDto })
-  @ApiBearerAuth()
   async findUserByUuid(@Param('uuid') uuid): Promise<ReturnUserDto> {
     return await this.usersService.findUserByUuid(uuid);
   }
@@ -60,7 +59,6 @@ export class UsersController {
   @Patch(':uuid')
   @ApiOperation({ summary: 'Update the user data' })
   @ApiOkResponse({ type: ReturnUserDto })
-  @ApiBearerAuth()
   async updateUser(
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
     @GetUser() user: User,
@@ -86,7 +84,6 @@ export class UsersController {
   @Delete(':uuid')
   @ApiOperation({ summary: 'Delete an user' })
   @ApiOkResponse({ description: 'Usuário deletado com sucesso' })
-  @ApiBearerAuth()
   @Role(UserRole.ADMIN)
   async deleteUser(@Param('uuid') uuid: string) {
     await this.usersService.deleteUser(uuid);
@@ -98,7 +95,6 @@ export class UsersController {
   @Get()
   @ApiOperation({ summary: 'Find users by filter query' })
   @ApiOkResponse({ type: ReturnFindUsersDto, isArray: true })
-  @ApiBearerAuth()
   @Role(UserRole.ADMIN)
   async findUsers(@Query() query: FindUsersQueryDto) {
     const data = await this.usersService.findUsers(query);

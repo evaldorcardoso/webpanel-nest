@@ -8,8 +8,9 @@ async function bootstrap() {
   const logger = WinstonModule.createLogger(winstonConfig);
   const config = new DocumentBuilder()
     .setTitle('WebPanel Fruteira API')
-    .setDescription('API para acesso ao sistema da Fruteira')
+    .setDescription('API to manage Fruteira System')
     .setVersion('0.1')
+    .addTag('Users')
     .addBearerAuth({
       description: 'Please enter token in following format: Bearer <JWT>',
       name: 'Authorization',
