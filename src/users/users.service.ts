@@ -1,6 +1,5 @@
 import {
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -11,6 +10,9 @@ import { User } from './entities/user.entity';
 import { UserRole } from './user-roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
+import { mapper } from 'src/mappings/mapper';
+import { UserDto } from './dto/user.dto';
+import { ReturnUserDto } from './dto/return-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,25 +21,30 @@ export class UsersService {
     private userRepository: UserRepository,
   ) {}
 
-  async createAdminUser(createUserDto: CreateUserDto): Promise<User> {
+  async createAdminUser(createUserDto: CreateUserDto): Promise<UserDto> {
     if (createUserDto.password !== createUserDto.passwordConfirmation) {
       throw new UnprocessableEntityException('As senhas não conferem');
     } else {
-      return this.userRepository.createUser(createUserDto, UserRole.ADMIN);
+      const user = await this.userRepository.createUser(
+        createUserDto,
+        UserRole.ADMIN,
+      );
+      return mapper.map(user, User, UserDto);
     }
   }
 
-  async findUserByUuid(uuid: string): Promise<User> {
+  async findUserByUuid(uuid: string): Promise<UserDto> {
     const user = await this.userRepository.findOne(
       { uuid },
       {
-        select: ['email', 'name', 'role', 'uuid'],
+        select: ['email', 'name', 'role', 'uuid', 'is_active'],
       },
     );
 
     if (!user) throw new NotFoundException('Usuário não encontrado');
 
-    return user;
+    // return user;
+    return mapper.map(user, User, UserDto);
   }
 
   async updateUser(updateUserDto: UpdateUserDto, uuid: string) {
@@ -56,9 +63,7 @@ export class UsersService {
     }
   }
 
-  async findUsers(
-    queryDto: FindUsersQueryDto,
-  ): Promise<{ users: User[]; total: number }> {
+  async findUsers(queryDto: FindUsersQueryDto): Promise<ReturnUserDto> {
     return await this.userRepository.findUsers(queryDto);
   }
 }

@@ -1,25 +1,13 @@
-import { Exclude } from 'class-transformer';
-import { User } from '../entities/user.entity';
-import { UserRole } from '../user-roles.enum';
+import { AutoMap } from '@automapper/classes';
+import { ApiProperty } from '@nestjs/swagger';
+import { UserDto } from './user.dto';
 
 export class ReturnUserDto {
-  id: number;
-  email: string;
-  name: string;
-  role: UserRole;
-  is_active: boolean;
-  confirmation_token: string;
-  recover_token: string | null;
-  uuid: string;
-  created_at: Date;
-  updated_at: Date;
+  @ApiProperty({ type: UserDto, isArray: true })
+  @AutoMap()
+  users: UserDto[];
 
-  @Exclude()
-  password: string;
-
-  constructor(user: User) {
-    this.id = user.id;
-    this.email = user.email;
-    this.name = user.name;
-  }
+  @ApiProperty({ default: 1 })
+  @AutoMap()
+  total: number;
 }

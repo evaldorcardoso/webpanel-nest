@@ -67,6 +67,21 @@
     ora "5.4.1"
     rxjs "6.6.7"
 
+"@automapper/classes@^8.3.3":
+  version "8.3.3"
+  resolved "https://registry.yarnpkg.com/@automapper/classes/-/classes-8.3.3.tgz#f877008c098e8441217ec5233596c3582875a04d"
+  integrity sha512-wPpxe3HtsSa0dbZrwg8Jz0aLV7R14FN4u1rNewONc7Z2W4F2o68CGEQ/S/YW5vVmr1w7g5Z+vNUwQAj11uv9dQ==
+
+"@automapper/core@^8.3.3":
+  version "8.3.3"
+  resolved "https://registry.yarnpkg.com/@automapper/core/-/core-8.3.3.tgz#3ef9a2cc00b2e1ed1319f8482b73caa6ac116cec"
+  integrity sha512-KXqdaPLqiTi+WMf67+EgCt2h+Q5pr6xNqMhaa5wGAZLapQEGi8ZEq3hsNm64y0YrBIVRXemMBUSs4DRvDhdSSw==
+
+"@automapper/nestjs@^8.3.3":
+  version "8.3.3"
+  resolved "https://registry.yarnpkg.com/@automapper/nestjs/-/nestjs-8.3.3.tgz#fd34d3ba8e6ccbe365e6618df844fcbc62a1f7df"
+  integrity sha512-9WQ6f9PIa8lCrZ4vPs+vVtifLgdmWPNNQ/xcKMOyLl3Cs+5J1Nk2rxErmBOOunWK7dgCMWskDugj11DAHOTf0Q==
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7":
   version "7.16.7"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.16.7.tgz"

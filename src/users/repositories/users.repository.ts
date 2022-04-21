@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common';
 import { CredentialsDto } from 'src/auth/dto/credentials.dto';
 import { FindUsersQueryDto } from '../dto/find-users-query.dto';
+import { mapper } from 'src/mappings/mapper';
+import { UserDto } from '../dto/user.dto';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async findUsers(
     queryDto: FindUsersQueryDto,
-  ): Promise<{ users: User[]; total: number }> {
+  ): Promise<{ users: UserDto[]; total: number }> {
     queryDto.is_active =
       queryDto.is_active === undefined ? true : queryDto.is_active;
     queryDto.page = queryDto.page === undefined ? 1 : queryDto.page;
@@ -50,7 +52,7 @@ export class UserRepository extends Repository<User> {
 
     const [users, total] = await query.getManyAndCount();
 
-    return { users, total };
+    return { users: mapper.mapArray(users, User, UserDto), total };
   }
 
   async createUser(

@@ -12,6 +12,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Financial } from 'src/financials/entities/financial.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from '@automapper/classes';
 
 @Entity()
 @Unique(['email'])
@@ -22,10 +23,12 @@ export class User extends BaseEntity {
   @Column()
   @Generated('uuid')
   @ApiProperty()
+  @AutoMap()
   uuid: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   @ApiProperty()
+  @AutoMap()
   email: string;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
@@ -33,14 +36,17 @@ export class User extends BaseEntity {
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
   @ApiProperty()
+  @AutoMap()
   name: string;
 
   @Column({ nullable: false, type: 'varchar', length: 20 })
   @ApiProperty()
+  @AutoMap()
   role: string;
 
   @Column({ nullable: false, default: true })
   @ApiProperty()
+  @AutoMap()
   is_active: boolean;
 
   @Column({ nullable: false, type: 'varchar', length: 100 })
