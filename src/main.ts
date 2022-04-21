@@ -8,7 +8,7 @@ import { mapper } from './mappings/mapper';
 import { UserDto } from './users/dto/user.dto';
 import { User } from './users/entities/user.entity';
 
-createMap(mapper, User, UserDto);
+//createMap(mapper, User, UserDto);
 
 async function bootstrap() {
   const logger = WinstonModule.createLogger(winstonConfig);

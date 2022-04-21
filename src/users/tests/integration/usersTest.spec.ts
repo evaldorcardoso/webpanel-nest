@@ -12,6 +12,11 @@ import { mailerConfig } from 'src/configs/mailer.config';
 import * as request from 'supertest';
 import { Financial } from 'src/financials/entities/financial.entity';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
+import { AutomapperModule } from '@automapper/nestjs';
+import { AppModule } from 'src/app.module';
+import { Company } from 'src/companies/entities/company.entity';
+import { CompanyRepository } from 'src/companies/repositories/companies.repository';
+import { UserProfile } from 'src/users/user-profile';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {

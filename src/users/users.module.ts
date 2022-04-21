@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './repositories/users.repository';
 import { PassportModule } from '@nestjs/passport';
+import { UserProfile } from './user-profile';
 
 @Module({
   imports: [
