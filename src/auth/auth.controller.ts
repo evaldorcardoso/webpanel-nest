@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -53,6 +54,7 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Login User' })
   @ApiOkResponse({ type: ReturnAuthDto })
   async signIn(
@@ -71,6 +73,7 @@ export class AuthController {
   }
 
   @Post('/send-recover-email')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Send recover email' })
   @ApiOkResponse({ type: ReturnMessageDto })
   @ApiBody({
@@ -90,6 +93,7 @@ export class AuthController {
   }
 
   @Patch('/reset-password/:token')
+  @HttpCode(200)
   @ApiOperation({ summary: 'Reset user password' })
   @ApiParam({ name: 'token', description: 'Token received via email' })
   @ApiOkResponse({ type: ReturnMessageDto })
@@ -104,6 +108,7 @@ export class AuthController {
   }
 
   @Patch(':uuid/change-password')
+  @HttpCode(200)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Change password of a logged User' })
   @ApiOkResponse({ type: ReturnMessageDto })
