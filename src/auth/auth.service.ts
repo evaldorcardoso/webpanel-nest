@@ -68,6 +68,10 @@ export class AuthService {
   }
 
   async confirmEmail(confirmation_token: string): Promise<User> {
+    const user_id = await this.userRepository.findOne(
+      { confirmation_token },
+      { select: ['id'] },
+    );
     const result = await this.userRepository.update(
       { confirmation_token },
       { confirmation_token: null, is_active: true },
@@ -75,8 +79,7 @@ export class AuthService {
     if (result.affected === 0) {
       throw new NotFoundException('Token inválido');
     }
-    const user = await this.userRepository.findOne({ confirmation_token }, {});
-    return user;
+    return await this.userRepository.findOne(user_id);
   }
 
   async sendRecoverPasswordEmail(email: string): Promise<boolean> {

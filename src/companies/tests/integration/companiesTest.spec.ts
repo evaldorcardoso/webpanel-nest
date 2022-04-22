@@ -233,7 +233,7 @@ describe('Companies CRUD', () => {
       .accept('application/json')
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.found.companies.length).toBe(0);
+        expect(res.body.companies.length).toBe(0);
       });
 
     await request(app.getHttpServer())
@@ -243,7 +243,7 @@ describe('Companies CRUD', () => {
       .send()
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.company.name).toBe(anotherCompany.name);
+        expect(res.body.name).toBe(anotherCompany.name);
       });
 
     await request(app.getHttpServer())
@@ -252,8 +252,9 @@ describe('Companies CRUD', () => {
       .accept('application/json')
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.found.companies.length).toBe(1);
-        expect(res.body.found.companies[0].name).toBe(anotherCompany.name);
+        expect(res.body.companies.length).toBe(1);
+        expect(res.body.total).toBe(1);
+        expect(res.body.companies[0].name).toBe(anotherCompany.name);
       });
   });
 
@@ -284,9 +285,9 @@ describe('Companies CRUD', () => {
       .accept('application/json')
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.found.companies.length).toBe(2);
-        expect(res.body.found.companies[0].name).toBe(company.name);
-        expect(res.body.found.companies[1].name).toBe(anotherCompany2.name);
+        expect(res.body.companies.length).toBe(2);
+        expect(res.body.companies[0].name).toBe(company.name);
+        expect(res.body.companies[1].name).toBe(anotherCompany2.name);
       });
   });
 
@@ -328,7 +329,7 @@ describe('Companies CRUD', () => {
       .accept('application/json')
       .expect(HttpStatus.OK)
       .then((res) => {
-        expect(res.body.found.companies[0].name).toBe('Company 2');
+        expect(res.body.companies[0].name).toBe('Company 2');
       });
   });
 
