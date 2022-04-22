@@ -12,6 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -72,6 +73,14 @@ export class AuthController {
   @Post('/send-recover-email')
   @ApiOperation({ summary: 'Send recover email' })
   @ApiOkResponse({ type: ReturnMessageDto })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string' },
+      },
+    },
+  })
   async sendRecoverPasswordEmail(
     @Body('email') email: string,
   ): Promise<{ message: string }> {
