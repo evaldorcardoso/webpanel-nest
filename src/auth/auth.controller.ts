@@ -61,7 +61,7 @@ export class AuthController {
     return await this.authService.signIn(credentialsDto);
   }
 
-  @Patch(':token')
+  @Get(':token')
   @ApiOperation({ summary: 'Activate the user registration' })
   @ApiParam({ name: 'token', description: 'Token received via email' })
   @ApiOkResponse({ type: ReturnUserDto })
