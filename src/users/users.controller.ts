@@ -25,6 +25,7 @@ import { User } from './entities/user.entity';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -41,7 +42,7 @@ export class UsersController {
   @Post()
   @Role(UserRole.ADMIN)
   @ApiOperation({ summary: 'Create a new Admin User' })
-  @ApiOkResponse({ type: ReturnUserDto })
+  @ApiCreatedResponse({ type: ReturnUserDto })
   async createAdminUser(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<ReturnUserDto> {
@@ -94,7 +95,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'Find users by filter query' })
-  @ApiOkResponse({ type: ReturnFindUsersDto, isArray: true })
+  @ApiOkResponse({ type: ReturnFindUsersDto })
   @Role(UserRole.ADMIN)
   async findUsers(@Query() query: FindUsersQueryDto) {
     const data = await this.usersService.findUsers(query);
@@ -102,7 +103,6 @@ export class UsersController {
     return {
       users: data.users,
       total: data.total,
-      message: 'Usuários encontrados com sucesso',
     };
   }
 }

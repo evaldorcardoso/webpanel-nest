@@ -1,4 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateCompanyDto } from './create-company.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateCompanyDto extends PartialType(CreateCompanyDto) {}
+export class UpdateCompanyDto {
+  @ApiProperty()
+  @IsOptional()
+  @IsString({
+    message: 'Informe o nome da empresa',
+  })
+  name: string;
+}

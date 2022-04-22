@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('API to manage Fruteira System')
     .setVersion('0.1')
     .addTag('Users')
+    .addTag('Companies')
     .addBearerAuth({
       description: 'Please enter token in following format: Bearer <JWT>',
       name: 'Authorization',
