@@ -10,7 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Financial } from 'src/financials/entities/financial.entity';
+import { Financial } from '../../financials/entities/financial.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
