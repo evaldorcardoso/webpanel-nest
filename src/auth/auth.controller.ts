@@ -10,6 +10,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { ReturnUserDto } from 'src/users/dto/return-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -17,50 +25,65 @@ import { UserRole } from 'src/users/user-roles.enum';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';
+import { ReturnAuthDto } from './dto/return-auth.dto';
+import { ReturnMessageDto } from './dto/return-message.dto';
 import { GetUser } from './get-user.decorator';
 import { Role } from './role.decorator';
 import { RolesGuard } from './roles.guard';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @ApiOperation({
+    summary: 'Register a new User and send an email registration',
+  })
+  @ApiCreatedResponse({ type: ReturnUserDto })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard(), RolesGuard)
   @Role(UserRole.ADMIN)
   async signUp(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
-  ): Promise<{ message: string }> {
-    await this.authService.signUp(createUserDto);
-    return { message: 'Usuário criado com sucesso' };
+  ): Promise<ReturnUserDto> {
+    const user = await this.authService.signUp(createUserDto);
+    return new ReturnUserDto(user);
   }
 
   @Post('/signin')
+  @ApiOperation({ summary: 'Login User' })
+  @ApiOkResponse({ type: ReturnAuthDto })
   async signIn(
     @Body(ValidationPipe) credentialsDto: CredentialsDto,
-  ): Promise<{ token: string }> {
+  ): Promise<ReturnAuthDto> {
     return await this.authService.signIn(credentialsDto);
   }
 
   @Patch(':token')
-  async confirmEmail(@Param('token') token: string) {
+  @ApiOperation({ summary: 'Activate the user registration' })
+  @ApiParam({ name: 'token', description: 'Token received via email' })
+  @ApiOkResponse({ type: ReturnUserDto })
+  async confirmEmail(@Param('token') token: string): Promise<ReturnUserDto> {
     const user = await this.authService.confirmEmail(token);
-    return {
-      message: 'Email confirmado com sucesso',
-    };
+    return new ReturnUserDto(user);
   }
 
   @Post('/send-recover-email')
+  @ApiOperation({ summary: 'Send recover email' })
+  @ApiOkResponse({ type: ReturnMessageDto })
   async sendRecoverPasswordEmail(
     @Body('email') email: string,
   ): Promise<{ message: string }> {
-    await this.authService.sendRecoverPasswordEmail(email);
-    return {
-      message: 'Foi enviado um email com instruções para recuperar a senha',
-    };
+    const result = await this.authService.sendRecoverPasswordEmail(email);
+    if (!result) return { message: 'Email não encontrado' };
+    return { message: 'Email enviado com sucesso' };
   }
 
   @Patch('/reset-password/:token')
+  @ApiOperation({ summary: 'Reset user password' })
+  @ApiParam({ name: 'token', description: 'Token received via email' })
+  @ApiOkResponse({ type: ReturnMessageDto })
   async resetPassword(
     @Param('token') token: string,
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
@@ -72,12 +95,15 @@ export class AuthController {
   }
 
   @Patch(':uuid/change-password')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Change password of a logged User' })
+  @ApiOkResponse({ type: ReturnMessageDto })
   @UseGuards(AuthGuard())
   async changePassword(
     @Param('uuid') uuid: string,
     @Body(ValidationPipe) changePasswordDto: ChangePasswordDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<{ message: string }> {
     if (user.role !== UserRole.ADMIN && user.uuid.toString() !== uuid)
       throw new UnauthorizedException(
         'Você não tem permissão para realizar esta operação',
@@ -90,9 +116,11 @@ export class AuthController {
   }
 
   @Get('/me')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get logged User' })
+  @ApiOkResponse({ type: ReturnUserDto })
   @UseGuards(AuthGuard())
-  getMe(@GetUser() user: User): User {
-    delete user.id;
-    return user;
+  getMe(@GetUser() user: User): ReturnUserDto {
+    return new ReturnUserDto(user);
   }
 }

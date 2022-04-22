@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('WebPanel Fruteira API')
     .setDescription('API to manage Fruteira System')
     .setVersion('0.1')
+    .addTag('Auth')
     .addTag('Users')
     .addTag('Companies')
     .addBearerAuth({

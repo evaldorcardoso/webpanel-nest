@@ -67,7 +67,7 @@ export class AuthService {
     return { token };
   }
 
-  async confirmEmail(confirmation_token: string): Promise<void> {
+  async confirmEmail(confirmation_token: string): Promise<User> {
     const result = await this.userRepository.update(
       { confirmation_token },
       { confirmation_token: null, is_active: true },
@@ -75,9 +75,11 @@ export class AuthService {
     if (result.affected === 0) {
       throw new NotFoundException('Token inválido');
     }
+    const user = await this.userRepository.findOne({ confirmation_token }, {});
+    return user;
   }
 
-  async sendRecoverPasswordEmail(email: string): Promise<void> {
+  async sendRecoverPasswordEmail(email: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ email });
 
     if (!user) {
@@ -96,7 +98,7 @@ export class AuthService {
         token: user.recover_token,
       },
     };
-    await this.mailerService.sendMail(mail);
+    return await this.mailerService.sendMail(mail);
   }
 
   async changePassword(
