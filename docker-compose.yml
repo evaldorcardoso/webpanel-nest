@@ -1,15 +1,15 @@
 version: "3.8"
-
+volumes:
+  data:
 services:
   db:
     container_name: ${MYSQL_HOST}
-    build: ./database
     image: 'mysql:8.0'
     ports:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
     restart: always
     volumes:
-      - './database/data:/var/lib/mysql'
+      - data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB_NAME}
