@@ -37,7 +37,7 @@ async function createAndAuthenticateUser(
       email: user.email,
       password: userData ? userData.password : DEFAULT_PASSWORD,
     })
-    .expect(201);
+    .expect(200);
 
   return response.body.token;
 }
