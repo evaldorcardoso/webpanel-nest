@@ -29,7 +29,7 @@ async function createAndAuthenticateAdmin(): Promise<string> {
       name: adminUser.name,
       email: adminUser.email,
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     },
     UserRole.ADMIN,
   );
@@ -88,7 +88,7 @@ describe('Authenticate users', () => {
         name: adminUser.name,
         email: adminUser.email,
         password: adminUser.password,
-        passwordConfirmation: adminUser.password,
+        password_confirmation: adminUser.password,
       },
       UserRole.ADMIN,
     );
@@ -114,7 +114,7 @@ describe('Authenticate users', () => {
         name: adminUser.name,
         email: adminUser.email,
         password: adminUser.password,
-        passwordConfirmation: adminUser.password,
+        password_confirmation: adminUser.password,
       },
       UserRole.USER,
     );
@@ -140,7 +140,7 @@ describe('Authenticate users', () => {
         name: adminUser.name,
         email: adminUser.email,
         password: adminUser.password,
-        passwordConfirmation: adminUser.password,
+        password_confirmation: adminUser.password,
       },
       UserRole.USER,
     );
@@ -161,7 +161,7 @@ describe('Authenticate users', () => {
         name: adminUser.name,
         email: adminUser.email,
         password: adminUser.password,
-        passwordConfirmation: adminUser.password,
+        password_confirmation: adminUser.password,
       },
       UserRole.USER,
     );
@@ -180,7 +180,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     await request(app.getHttpServer())
       .post('/auth/signup')
@@ -208,7 +208,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password + '*',
+      password_confirmation: adminUser.password + '*',
     };
     await request(app.getHttpServer())
       .post('/auth/signup')
@@ -231,7 +231,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     await request(app.getHttpServer())
       .post('/auth/signup')
@@ -277,7 +277,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     await request(app.getHttpServer())
       .post('/auth/signup')
@@ -298,7 +298,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     let user = await userRepository.createUser(userData, UserRole.USER);
 
@@ -315,7 +315,7 @@ describe('Auth Flow', () => {
       .accept('application/json')
       .send({
         password: userData.password + '*',
-        password_confirmation: userData.passwordConfirmation + '*',
+        password_confirmation: userData.password_confirmation + '*',
       })
       .expect(HttpStatus.OK);
   });
@@ -325,7 +325,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     let user = await userRepository.createUser(userData, UserRole.USER);
 
@@ -342,7 +342,7 @@ describe('Auth Flow', () => {
       .accept('application/json')
       .send({
         password: userData.password + '*',
-        password_confirmation: userData.passwordConfirmation + '#',
+        password_confirmation: userData.password_confirmation + '#',
       })
       .expect(HttpStatus.UNPROCESSABLE_ENTITY);
   });
@@ -352,7 +352,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     await userRepository.createUser(userData, UserRole.USER);
 
@@ -368,7 +368,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     await userRepository.createUser(userData, UserRole.USER);
 
@@ -377,7 +377,7 @@ describe('Auth Flow', () => {
       .accept('application/json')
       .send({
         password: userData.password + '*',
-        password_confirmation: userData.passwordConfirmation + '*',
+        password_confirmation: userData.password_confirmation + '*',
       })
       .expect(HttpStatus.NOT_FOUND);
   });
@@ -419,7 +419,7 @@ describe('Auth Flow', () => {
       email: 'user@email.com.br',
       name: 'User',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     const user = await userRepository.createUser(userData, UserRole.USER);
     await userRepository.update(user.id, {
@@ -436,7 +436,7 @@ describe('Auth Flow', () => {
       email: 'user2@email.com.br',
       name: 'User 2',
       password: adminUser.password,
-      passwordConfirmation: adminUser.password,
+      password_confirmation: adminUser.password,
     };
     const anotherUser = await userRepository.createUser(
       anotherUserData,

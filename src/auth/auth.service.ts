@@ -27,7 +27,7 @@ export class AuthService {
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<User> {
-    if (createUserDto.password !== createUserDto.passwordConfirmation) {
+    if (createUserDto.password !== createUserDto.password_confirmation) {
       throw new UnprocessableEntityException('Senhas não conferem');
     }
 

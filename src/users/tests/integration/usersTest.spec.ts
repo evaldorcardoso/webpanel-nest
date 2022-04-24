@@ -18,7 +18,7 @@ interface UserDto {
   name: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  password_confirmation: string;
 }
 
 let userRepository: UserRepository;
@@ -53,7 +53,7 @@ async function createUser(
         name: '',
         email: '',
         password: DEFAULT_PASSWORD,
-        passwordConfirmation: DEFAULT_PASSWORD,
+        password_confirmation: DEFAULT_PASSWORD,
       };
 
   if (role === UserRole.ADMIN) {
@@ -121,7 +121,7 @@ describe('Users CRUD', () => {
         email: 'admin2@admin.com.br',
         name: 'Admin',
         password: '@321Abc',
-        passwordConfirmation: '@321Abc',
+        password_confirmation: '@321Abc',
       })
       .expect(HttpStatus.CREATED);
   });
@@ -136,7 +136,7 @@ describe('Users CRUD', () => {
         email: 'admin@email.com',
         name: 'Admin',
         password: DEFAULT_PASSWORD,
-        passwordConfirmation: DEFAULT_PASSWORD,
+        password_confirmation: DEFAULT_PASSWORD,
       })
       .expect(HttpStatus.CONFLICT);
   });
@@ -149,7 +149,7 @@ describe('Users CRUD', () => {
         email: 'admin2@admin.com.br',
         name: 'Admin',
         password: '@321Abc',
-        passwordConfirmation: '@321Abc',
+        password_confirmation: '@321Abc',
       })
       .expect(HttpStatus.UNAUTHORIZED);
   });
@@ -276,7 +276,7 @@ describe('Users CRUD', () => {
       email: 'user2@email.com',
       name: 'User 2',
       password: '@321Abc',
-      passwordConfirmation: '@321Abc',
+      password_confirmation: '@321Abc',
     });
 
     await request(app.getHttpServer())
@@ -345,7 +345,7 @@ describe('Users CRUD', () => {
       email: 'user2@email.com',
       name: 'User 2',
       password: '@321Abc',
-      passwordConfirmation: '@321Abc',
+      password_confirmation: '@321Abc',
     });
 
     await request(app.getHttpServer())

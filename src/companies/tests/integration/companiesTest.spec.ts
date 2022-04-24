@@ -13,7 +13,6 @@ import * as request from 'supertest';
 import { CompaniesModule } from 'src/companies/companies.module';
 import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { Company } from 'src/companies/entities/company.entity';
-import { FindCompaniesQueryDto } from 'src/companies/dto/find-companies-query.dto';
 import { Financial } from 'src/financials/entities/financial.entity';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 
@@ -22,7 +21,7 @@ interface UserDto {
   name: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  password_confirmation: string;
 }
 
 let companyRepository: CompanyRepository;
@@ -53,7 +52,7 @@ async function createUser(
         name: '',
         email: '',
         password: DEFAULT_PASSWORD,
-        passwordConfirmation: DEFAULT_PASSWORD,
+        password_confirmation: DEFAULT_PASSWORD,
       };
 
   if (role === UserRole.ADMIN) {
