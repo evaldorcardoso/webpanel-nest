@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { UserRole } from 'src/users/user-roles.enum';
 import { CreateFinancialDto } from './dto/create-financial.dto';
-import { UpdateFinancialDto } from './dto/update-financial.dto';
 import { FinancialRepository } from './repositories/financial.repository';
 
 @Injectable()

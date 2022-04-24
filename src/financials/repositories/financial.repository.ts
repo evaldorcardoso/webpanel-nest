@@ -21,7 +21,7 @@ export class FinancialRepository extends Repository<Financial> {
 
     try {
       await financial.save();
-      return { financial, message: 'Caixa criado com sucesso' };
+      return financial;
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY' || error.code === 'SQLITE_CONSTRAINT') {
         throw new ConflictException('Caixa já cadastrado');

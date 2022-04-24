@@ -22,7 +22,7 @@ interface UserDto {
   name: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
+  password_confirmation: string;
 }
 
 let financialRepository: FinancialRepository;
@@ -54,7 +54,7 @@ async function createUser(
         name: '',
         email: '',
         password: DEFAULT_PASSWORD,
-        passwordConfirmation: DEFAULT_PASSWORD,
+        password_confirmation: DEFAULT_PASSWORD,
       };
 
   if (role === UserRole.ADMIN) {
@@ -86,7 +86,7 @@ async function authenticateUser(
       email,
       password,
     })
-    .expect(201);
+    .expect(200);
 
   return response.body.token;
 }
@@ -150,10 +150,7 @@ describe('Financials CRUD', () => {
       .send({
         company: company.uuid,
       })
-      .expect(201)
-      .then((response) => {
-        console.log(response.body);
-      });
+      .expect(201);
   });
 
   it('should be able to create a Financial to the linked company with an authenticated normal user', async () => {
