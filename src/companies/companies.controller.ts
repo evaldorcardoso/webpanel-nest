@@ -118,7 +118,7 @@ export class CompaniesController {
 
   @Delete(':uuid')
   @ApiOperation({ summary: 'Delete a Company' })
-  @ApiOkResponse({ description: 'Empresa deletada com sucesso' })
+  @ApiOkResponse()
   @Role(UserRole.ADMIN)
   async delete(@Param('uuid') uuid: string) {
     await this.companiesService.delete(uuid);

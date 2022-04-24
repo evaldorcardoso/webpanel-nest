@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { FinancialsService } from './financials.service';
 import { CreateFinancialDto } from './dto/create-financial.dto';
@@ -23,6 +24,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ReturnFinancialDto } from './dto/return-financial.dto';
+import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
+import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
 
 @ApiTags('Financials')
 @ApiBearerAuth()
@@ -43,20 +46,22 @@ export class FinancialsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all financials' })
-  @ApiOkResponse({ type: ReturnFinancialDto, isArray: true })
+  @ApiOperation({ summary: 'find financials by filter query' })
+  @ApiOkResponse({ type: ReturnFindFinancialsDto })
   @Role(UserRole.ADMIN)
-  findAll() {
-    return this.financialsService.findAll();
-  }
-
-  @Get(':id')
-  @Role(UserRole.ADMIN)
-  findOne(@Param('id') id: string) {
-    return this.financialsService.findOne(+id);
+  async findAll(
+    @Query() query: FindFinancialsQueryDto,
+  ): Promise<ReturnFindFinancialsDto> {
+    const found = await this.financialsService.findAll(query);
+    return {
+      financials: found.financials,
+      total: found.total,
+    };
   }
 
   @Delete(':uuid')
+  @ApiOperation({ summary: 'Delete a financial' })
+  @ApiOkResponse()
   @Role(UserRole.ADMIN)
   async remove(@Param('uuid') uuid: string) {
     return await this.financialsService.remove(uuid);

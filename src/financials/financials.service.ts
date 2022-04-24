@@ -7,6 +7,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { UserRole } from 'src/users/user-roles.enum';
 import { CreateFinancialDto } from './dto/create-financial.dto';
+import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
+import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
 import { FinancialRepository } from './repositories/financial.repository';
 
 @Injectable()
@@ -35,8 +37,10 @@ export class FinancialsService {
     );
   }
 
-  findAll() {
-    return `This action returns all financials`;
+  async findAll(
+    queryDto: FindFinancialsQueryDto,
+  ): Promise<ReturnFindFinancialsDto> {
+    return await this.financialRepository.findFinancials(queryDto);
   }
 
   findOne(id: number) {

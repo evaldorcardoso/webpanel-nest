@@ -24,8 +24,7 @@ export class CompaniesService {
   async findCompanies(
     queryDto: FindCompaniesQueryDto,
   ): Promise<{ companies: Company[]; total: number }> {
-    const companies = await this.companyRepository.findCompanies(queryDto);
-    return companies;
+    return await this.companyRepository.findCompanies(queryDto);
   }
 
   async findMyCompanies(

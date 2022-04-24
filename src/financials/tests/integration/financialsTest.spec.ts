@@ -190,6 +190,52 @@ describe('Financials CRUD', () => {
       .expect(HttpStatus.FORBIDDEN);
   });
 
+  it('should be able to find a Financial by company and date with an authenticated admin user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await createUser(UserRole.USER);
+    await userRepository.findOne({
+      email: 'admin@email.com',
+    });
+
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company',
+    });
+
+    const another_company = await companyRepository.createCompany(user.id, {
+      name: 'Company2',
+    });
+
+    await financialRepository.createFinancial(user.id, {
+      company: company.uuid,
+    });
+
+    const financial2 = await financialRepository.createFinancial(user.id, {
+      company: another_company.uuid,
+    });
+
+    const financial3 = await financialRepository.createFinancial(user.id, {
+      company: another_company.uuid,
+    });
+
+    const date_now = new Date().toISOString().split('T')[0];
+    await request(app.getHttpServer())
+      .get(
+        '/financials?company=' +
+          another_company.uuid +
+          '&created_at=' +
+          date_now,
+      )
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .expect(HttpStatus.OK)
+      .then((response) => {
+        expect(response.body.financials.length).toBe(2);
+        expect(response.body.financials[0].uuid).toBe(financial2.uuid);
+        expect(response.body.financials[1].uuid).toBe(financial3.uuid);
+        expect(response.body.total).toBe(2);
+      });
+  });
+
   it('should be able to delete a Financial with an authenticated admin user', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await userRepository.findOne({
@@ -205,7 +251,7 @@ describe('Financials CRUD', () => {
     });
 
     await request(app.getHttpServer())
-      .delete(`/financials/${financial.financial.uuid}`)
+      .delete(`/financials/${financial.uuid}`)
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(HttpStatus.OK);
   });

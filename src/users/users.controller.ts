@@ -84,7 +84,7 @@ export class UsersController {
 
   @Delete(':uuid')
   @ApiOperation({ summary: 'Delete an user' })
-  @ApiOkResponse({ description: 'Usuário deletado com sucesso' })
+  @ApiOkResponse()
   @Role(UserRole.ADMIN)
   async deleteUser(@Param('uuid') uuid: string) {
     await this.usersService.deleteUser(uuid);
