@@ -19,10 +19,10 @@ export class ReturnUserDto {
   is_active: boolean;
 
   constructor(user: User) {
-    this.uuid = user.uuid;
-    this.email = user.email;
-    this.name = user.name;
-    this.role = UserRole[user.role];
-    this.is_active = user.is_active;
+    this.uuid = user.uuid ? user.uuid : null;
+    this.email = user.email ? user.email : null;
+    this.name = user.name ? user.name : null;
+    this.role = UserRole[user.role] ? UserRole[user.role] : null;
+    this.is_active = user.is_active ? user.is_active : null;
   }
 }

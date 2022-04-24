@@ -39,6 +39,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
+  @HttpCode(201)
   @ApiOperation({
     summary: 'Register a new User and send an email registration',
   })
@@ -61,6 +62,15 @@ export class AuthController {
     @Body(ValidationPipe) credentialsDto: CredentialsDto,
   ): Promise<ReturnAuthDto> {
     return await this.authService.signIn(credentialsDto);
+  }
+
+  @Get('/me')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get logged User' })
+  @ApiOkResponse({ type: ReturnUserDto })
+  @UseGuards(AuthGuard())
+  getMe(@GetUser() user: User) {
+    return new ReturnUserDto(user);
   }
 
   @Get(':token')
@@ -122,19 +132,9 @@ export class AuthController {
       throw new UnauthorizedException(
         'Você não tem permissão para realizar esta operação',
       );
-
     await this.authService.changePassword(uuid, changePasswordDto);
     return {
       message: 'Senha alterada com sucesso',
     };
-  }
-
-  @Get('/me')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get logged User' })
-  @ApiOkResponse({ type: ReturnUserDto })
-  @UseGuards(AuthGuard())
-  getMe(@GetUser() user: User): ReturnUserDto {
-    return new ReturnUserDto(user);
   }
 }

@@ -41,7 +41,7 @@ async function createAndAuthenticateAdmin(): Promise<string> {
   const response = await request(app.getHttpServer())
     .post('/auth/signin')
     .send({ email: adminUser.email, password: adminUser.password })
-    .expect(201);
+    .expect(200);
 
   return response.body.token;
 }
@@ -100,7 +100,7 @@ describe('Authenticate users', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/signin')
       .send({ email: adminUser.email, password: adminUser.password })
-      .expect(201);
+      .expect(200);
 
     jwtTokenAdmin = response.body.token;
     expect(jwtTokenAdmin).toMatch(
@@ -126,7 +126,7 @@ describe('Authenticate users', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/signin')
       .send({ email: adminUser.email, password: adminUser.password })
-      .expect(201);
+      .expect(200);
 
     const jwtToken = response.body.token;
     expect(jwtToken).toMatch(
@@ -253,7 +253,7 @@ describe('Auth Flow', () => {
     });
 
     await request(app.getHttpServer())
-      .patch(`/auth/${userAfter.confirmation_token}`)
+      .get(`/auth/${userAfter.confirmation_token}`)
       .accept('application/json')
       .send()
       .expect(HttpStatus.OK);
@@ -306,7 +306,7 @@ describe('Auth Flow', () => {
       .post('/auth/send-recover-email')
       .accept('application/json')
       .send({ email: user.email })
-      .expect(HttpStatus.CREATED);
+      .expect(HttpStatus.OK);
 
     user = await userRepository.findOne(user.id);
 
@@ -333,7 +333,7 @@ describe('Auth Flow', () => {
       .post('/auth/send-recover-email')
       .accept('application/json')
       .send({ email: user.email })
-      .expect(HttpStatus.CREATED);
+      .expect(HttpStatus.OK);
 
     user = await userRepository.findOne(user.id);
 
@@ -429,7 +429,7 @@ describe('Auth Flow', () => {
     const response = await request(app.getHttpServer())
       .post('/auth/signin')
       .send({ email: userData.email, password: userData.password })
-      .expect(201);
+      .expect(HttpStatus.OK);
     const jwtToken = response.body.token;
 
     const anotherUserData = {
