@@ -1,3 +1,4 @@
+import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   BaseEntity,
@@ -6,6 +7,7 @@ import {
   Entity,
   Generated,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -23,6 +25,12 @@ export class Financial extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.financials)
   user: User;
+
+  @OneToMany(
+    () => FinancialDetail,
+    (financialDetail) => financialDetail.financial,
+  )
+  financialDetails: FinancialDetail[];
 
   @CreateDateColumn()
   created_at: Date;

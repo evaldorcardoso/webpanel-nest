@@ -111,9 +111,7 @@ export class CompaniesController {
     @Param('uuid') uuid: string,
     @Body(ValidationPipe) updateCompanyDto: UpdateCompanyDto,
   ): Promise<ReturnCompanyDto> {
-    const company = await this.companiesService.update(updateCompanyDto, uuid);
-
-    return new ReturnCompanyDto(company);
+    return await this.companiesService.update(updateCompanyDto, uuid);
   }
 
   @Delete(':uuid')
@@ -122,8 +120,5 @@ export class CompaniesController {
   @Role(UserRole.ADMIN)
   async delete(@Param('uuid') uuid: string) {
     await this.companiesService.delete(uuid);
-    return {
-      message: 'Empresa deletada com sucesso',
-    };
   }
 }

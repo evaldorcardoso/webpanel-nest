@@ -13,6 +13,8 @@ import { mailerConfig } from './configs/mailer.config';
 import { CompaniesModule } from './companies/companies.module';
 import { FinancialsModule } from './financials/financials.module';
 import { ConfigModule } from '@nestjs/config';
+import { FinancialDetailsModule } from './financial-details/financial-details.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     AuthModule,
     FinancialsModule,
+    FinancialDetailsModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [
