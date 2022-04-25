@@ -48,7 +48,7 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Get a Payment Method by UUID' })
   @ApiOkResponse({ type: () => ReturnPaymentDto })
   async findOne(@Param('uuid') uuid: string) {
-    return await this.paymentsService.findOne(uuid);
+    return new ReturnPaymentDto(await this.paymentsService.findOne(uuid));
   }
 
   @Get()
@@ -70,7 +70,9 @@ export class PaymentsController {
     @Param('uuid') uuid: string,
     @Body(ValidationPipe) updatePaymentDto: UpdatePaymentDto,
   ) {
-    return await this.paymentsService.update(uuid, updatePaymentDto);
+    return new ReturnPaymentDto(
+      await this.paymentsService.update(uuid, updatePaymentDto),
+    );
   }
 
   @Delete(':uuid')
