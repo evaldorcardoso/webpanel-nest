@@ -139,110 +139,30 @@ afterEach(async () => {
 });
 
 describe('Financials CRUD', () => {
-  it('should be able to create a Financial for any company with an authenticated admin user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await createUser(UserRole.USER);
-    await userRepository.findOne({
-      email: 'admin@email.com',
-    });
-
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
-
-    await request(app.getHttpServer())
-      .post('/financials')
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .send({
-        company: company.uuid,
-      })
-      .expect(201);
-  });
-
-  it('should be able to create a Financial to the linked company with an authenticated normal user', async () => {
+  it('should be able to create a Financial Detail to the linked company', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.USER);
-    const user = await userRepository.findOne({ email: 'user@email.com' });
-
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
-
-    await request(app.getHttpServer())
-      .post('/financials')
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .send({
-        company: company.uuid,
-      })
-      .expect(201);
-  });
-
-  it('should not be able to create a Financial for an unlinked company with an authenticated normal user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.USER);
-    const userAdmin = await createUser(UserRole.ADMIN);
-    await userRepository.findOne({
+    const user = await userRepository.findOne({
       email: 'user@email.com',
     });
 
-    const company = await companyRepository.createCompany(userAdmin.id, {
-      name: 'Company',
-    });
-
-    await request(app.getHttpServer())
-      .post('/financials')
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .send({
-        company: company.uuid,
-      })
-      .expect(HttpStatus.FORBIDDEN);
-  });
-
-  it('should be able to find a Financial by company and date with an authenticated admin user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await createUser(UserRole.USER);
-    await userRepository.findOne({
-      email: 'admin@email.com',
-    });
-
     const company = await companyRepository.createCompany(user.id, {
       name: 'Company',
     });
 
-    const another_company = await companyRepository.createCompany(user.id, {
-      name: 'Company2',
-    });
-
-    await financialRepository.createFinancial(user.id, {
+    const financial = await financialRepository.createFinancial(user.id, {
       company: company.uuid,
     });
 
-    const financial2 = await financialRepository.createFinancial(user.id, {
-      company: another_company.uuid,
-    });
-
-    const financial3 = await financialRepository.createFinancial(user.id, {
-      company: another_company.uuid,
-    });
-
-    const date_now = new Date().toISOString().split('T')[0];
     await request(app.getHttpServer())
-      .get(
-        '/financials?company=' +
-          another_company.uuid +
-          '&created_at=' +
-          date_now,
-      )
+      .post('/financials' + '/' + financial.uuid + '/details')
       .set('Authorization', `Bearer ${jwtToken}`)
-      .accept('application/json')
-      .expect(HttpStatus.OK)
-      .then((response) => {
-        expect(response.body.financials.length).toBe(2);
-        expect(response.body.financials[0].uuid).toBe(financial2.uuid);
-        expect(response.body.financials[1].uuid).toBe(financial3.uuid);
-        expect(response.body.total).toBe(2);
-      });
+      .send({
+        value: 100,
+      })
+      .expect(HttpStatus.CREATED);
   });
 
-  it('should be able to delete a Financial with an authenticated admin user', async () => {
+  it('should be able to delete a Financial Detail to the linked company', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await userRepository.findOne({
       email: 'admin@email.com',
@@ -256,8 +176,19 @@ describe('Financials CRUD', () => {
       company: company.uuid,
     });
 
+    const financialDetail =
+      await financialDetailRepository.createFinancialDetail(financial.id, {
+        value: 100,
+      });
+
     await request(app.getHttpServer())
-      .delete(`/financials/${financial.uuid}`)
+      .delete(
+        '/financials' +
+          '/' +
+          financial.uuid +
+          '/details/' +
+          financialDetail.uuid,
+      )
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(HttpStatus.OK);
   });

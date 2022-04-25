@@ -21,7 +21,9 @@ export class FinancialDetail extends BaseEntity {
   @Column({ nullable: false, type: 'decimal' })
   value: number;
 
-  @ManyToOne(() => Financial, (financial) => financial.financialDetails)
+  @ManyToOne(() => Financial, (financial) => financial.financialDetails, {
+    onDelete: 'CASCADE',
+  })
   financial: Financial;
 
   @CreateDateColumn()

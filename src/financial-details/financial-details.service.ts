@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 import { CreateFinancialDetailDto } from './dto/create-financial-detail.dto';
-import { UpdateFinancialDetailDto } from './dto/update-financial-detail.dto';
 import { FinancialDetailRepository } from './repositories/financial-detail.repository';
 
 @Injectable()
@@ -30,19 +29,26 @@ export class FinancialDetailsService {
     );
   }
 
-  findAll() {
-    return `This action returns all financialDetails`;
-  }
+  async remove(financial_uuid, uuid: string) {
+    const financial = await this.financialRepository.findOne({
+      select: ['id'],
+      where: {
+        uuid: financial_uuid,
+      },
+    });
+    const financialDetail = await this.financialDetailRepository.findOne({
+      select: ['id'],
+      where: {
+        uuid,
+        financial: financial.id,
+      },
+    });
+    const result = await this.financialDetailRepository.delete(
+      financialDetail.id,
+    );
 
-  findOne(id: number) {
-    return `This action returns a #${id} financialDetail`;
-  }
-
-  update(id: number, updateFinancialDetailDto: UpdateFinancialDetailDto) {
-    return `This action updates a #${id} financialDetail`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} financialDetail`;
+    if (result.affected === 0) {
+      throw new NotFoundException('Lançamento não encontrado');
+    }
   }
 }

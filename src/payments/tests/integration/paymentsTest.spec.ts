@@ -28,7 +28,6 @@ interface UserDto {
 
 let paymentRepository: PaymentRepository;
 let userRepository: UserRepository;
-let jwtToken: string;
 let app: INestApplication;
 
 async function createAndAuthenticateUser(

@@ -48,7 +48,7 @@ export class FinancialRepository extends Repository<Financial> {
   async createFinancial(
     user_id,
     CreateFinancialDto: CreateFinancialDto,
-  ): Promise<ReturnFinancialDto> {
+  ): Promise<Financial> {
     const { company } = CreateFinancialDto;
 
     const financial = this.create();

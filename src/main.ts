@@ -14,6 +14,7 @@ async function bootstrap() {
     .addTag('Users')
     .addTag('Companies')
     .addTag('Financials')
+    .addTag('Financial details')
     .addTag('Payment Methods')
     .addBearerAuth({
       description: 'Please enter token in following format: Bearer <JWT>',

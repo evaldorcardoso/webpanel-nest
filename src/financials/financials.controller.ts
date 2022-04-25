@@ -21,12 +21,16 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { ReturnFinancialDto } from './dto/return-financial.dto';
 import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
 import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
 import { FinancialDetailsService } from 'src/financial-details/financial-details.service';
+import { CreateFinancialDetailDto } from 'src/financial-details/dto/create-financial-detail.dto';
+import { ReturnFinancialCompleteDto } from './dto/return-financial-complete.dto';
+import { ReturnFinancialDetailDto } from 'src/financial-details/dto/return-financial-detail.dto';
 
 @ApiTags('Financials')
 @ApiBearerAuth()
@@ -38,16 +42,19 @@ export class FinancialsController {
     private readonly financialDetailsService: FinancialDetailsService,
   ) {}
 
-  @Post('/:uuid/details')
-  @ApiOperation({ summary: 'Add financial details' })
+  @Post('/:financial/details')
+  @ApiTags('Financial details')
+  @ApiOperation({ summary: 'Add a financial detail' })
   @ApiCreatedResponse()
   async createFinancialDetails(
-    @Param('uuid') financial_uuid: string,
-    @Body() createFinancialDto: CreateFinancialDto,
-  ) {
-    return await this.financialDetailsService.create(
-      financial_uuid,
-      createFinancialDto,
+    @Param('financial') financial_uuid: string,
+    @Body() createFinancialDetailDto: CreateFinancialDetailDto,
+  ): Promise<ReturnFinancialDetailDto> {
+    return new ReturnFinancialDetailDto(
+      await this.financialDetailsService.create(
+        financial_uuid,
+        createFinancialDetailDto,
+      ),
     );
   }
 
@@ -58,8 +65,22 @@ export class FinancialsController {
   async create(
     @Body() createFinancialDto: CreateFinancialDto,
     @GetUser() user: User,
-  ) {
-    return await this.financialsService.create(user, createFinancialDto);
+  ): Promise<ReturnFinancialDto> {
+    return new ReturnFinancialDto(
+      await this.financialsService.create(user, createFinancialDto),
+    );
+  }
+
+  @Get(':uuid')
+  @ApiOperation({ summary: 'Get a financial and its details by uuid' })
+  @ApiOkResponse({ type: ReturnFinancialCompleteDto })
+  @Role(UserRole.ADMIN)
+  async findOne(
+    @Param('uuid') uuid: string,
+  ): Promise<ReturnFinancialCompleteDto> {
+    return new ReturnFinancialCompleteDto(
+      await this.financialsService.findOne(uuid),
+    );
   }
 
   @Get()
@@ -82,5 +103,16 @@ export class FinancialsController {
   @Role(UserRole.ADMIN)
   async remove(@Param('uuid') uuid: string) {
     return await this.financialsService.remove(uuid);
+  }
+
+  @Delete(':financial/details/:uuid')
+  @ApiTags('Financial details')
+  @ApiOperation({ summary: 'Delete a financial detail' })
+  @ApiOkResponse()
+  async deleteFinancialDetails(
+    @Param('financial') financial_uuid: string,
+    @Param('uuid') uuid: string,
+  ) {
+    await this.financialDetailsService.remove(financial_uuid, uuid);
   }
 }
