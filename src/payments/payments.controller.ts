@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
@@ -22,6 +23,8 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { ReturnPaymentDto } from './dto/return-payment.dto';
+import { ReturnFindPaymentsDto } from './dto/return-find-payments.dto';
+import { FindPaymentsQueryDto } from './dto/find-payments-query.dto';
 
 @ApiTags('Payment Methods')
 @ApiBearerAuth()
@@ -36,12 +39,9 @@ export class PaymentsController {
   async create(
     @Body() createPaymentDto: CreatePaymentDto,
   ): Promise<ReturnPaymentDto> {
-    return await this.paymentsService.create(createPaymentDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.paymentsService.findAll();
+    return new ReturnPaymentDto(
+      await this.paymentsService.create(createPaymentDto),
+    );
   }
 
   @Get(':uuid')
@@ -49,6 +49,18 @@ export class PaymentsController {
   @ApiOkResponse({ type: () => ReturnPaymentDto })
   async findOne(@Param('uuid') uuid: string) {
     return await this.paymentsService.findOne(uuid);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Find payment methods by filter query' })
+  @ApiOkResponse({ type: () => ReturnFindPaymentsDto })
+  async findAll(@Query() query: FindPaymentsQueryDto) {
+    const data = await this.paymentsService.findAll(query);
+
+    return {
+      payments: data.payments,
+      total: data.total,
+    };
   }
 
   @Patch(':uuid')

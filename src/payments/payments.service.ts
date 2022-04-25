@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { FindPaymentsQueryDto } from './dto/find-payments-query.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Payment } from './entities/payment.entity';
 import { PaymentRepository } from './repositories/payment.repository';
@@ -13,11 +14,13 @@ export class PaymentsService {
   ) {}
 
   async create(createPaymentDto: CreatePaymentDto) {
-    return await this.paymentRepository.create(createPaymentDto);
+    return await this.paymentRepository.createPayment(createPaymentDto);
   }
 
-  findAll() {
-    return `This action returns all payments`;
+  async findAll(
+    queryDto: FindPaymentsQueryDto,
+  ): Promise<{ payments: Payment[]; total: number }> {
+    return await this.paymentRepository.findPayments(queryDto);
   }
 
   async findOne(uuid: string): Promise<Payment> {

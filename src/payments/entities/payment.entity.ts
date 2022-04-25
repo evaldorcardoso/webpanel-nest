@@ -5,9 +5,11 @@ import {
   Entity,
   Generated,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity()
+@Unique(['name'])
 export class Payment extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
