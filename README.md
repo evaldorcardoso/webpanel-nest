@@ -15,8 +15,8 @@ API to manage Fruteira System
 
 * [NestJS](https://nestjs.com/) - A progressive Node.js framework
 * [MySQL](https://www.mysql.com/) - Database
-* [Docker] (https://www.docker.com/) - Open platform for developing, shipping, and running applications.
-* [Yarn] (https://yarnpkg.com/) - Javascript Package manager
+* [Docker](https://www.docker.com/) - Open platform for developing, shipping, and running applications.
+* [Yarn](https://yarnpkg.com/) - Javascript Package manager
 
 ##  Installation
 
