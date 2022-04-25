@@ -12,6 +12,8 @@ import { mailerConfig } from 'src/configs/mailer.config';
 import * as request from 'supertest';
 import { Financial } from 'src/financials/entities/financial.entity';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
+import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
+import { FinancialDetailRepository } from 'src/financial-details/repositories/financial-detail.repository';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {
@@ -84,11 +86,15 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User, Financial],
+        entities: [User, Financial, FinancialDetail],
         logging: false,
         synchronize: true,
       }),
-      TypeOrmModule.forFeature([UserRepository, FinancialRepository]),
+      TypeOrmModule.forFeature([
+        UserRepository,
+        FinancialRepository,
+        FinancialDetailRepository,
+      ]),
       AuthModule,
     ],
   }).compile();

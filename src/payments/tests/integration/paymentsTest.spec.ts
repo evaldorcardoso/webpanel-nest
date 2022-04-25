@@ -4,15 +4,14 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { CompaniesModule } from 'src/companies/companies.module';
-import { Company } from 'src/companies/entities/company.entity';
-import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 import { mailerConfig } from 'src/configs/mailer.config';
 import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
 import { FinancialDetailRepository } from 'src/financial-details/repositories/financial-detail.repository';
 import { Financial } from 'src/financials/entities/financial.entity';
-import { FinancialsModule } from 'src/financials/financials.module';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
+import { Payment } from 'src/payments/entities/payment.entity';
+import { PaymentsModule } from 'src/payments/payments.module';
+import { PaymentRepository } from 'src/payments/repositories/payment.repository';
 import { User } from 'src/users/entities/user.entity';
 import { UserRepository } from 'src/users/repositories/users.repository';
 import { UserRole } from 'src/users/user-roles.enum';
@@ -27,8 +26,7 @@ interface UserDto {
   password_confirmation: string;
 }
 
-let financialRepository: FinancialRepository;
-let companyRepository: CompanyRepository;
+let paymentRepository: PaymentRepository;
 let userRepository: UserRepository;
 let jwtToken: string;
 let app: INestApplication;
@@ -102,26 +100,24 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User, Company, Financial, FinancialDetail],
+        entities: [User, Financial, FinancialDetail, Payment],
         synchronize: true,
         logging: false,
       }),
       TypeOrmModule.forFeature([
         UserRepository,
-        CompanyRepository,
         FinancialRepository,
         FinancialDetailRepository,
+        PaymentRepository,
       ]),
       AuthModule,
-      CompaniesModule,
-      FinancialsModule,
+      PaymentsModule,
     ],
   }).compile();
 
   app = moduleFixture.createNestApplication();
   await app.init();
-  companyRepository = moduleFixture.get(CompanyRepository);
-  financialRepository = moduleFixture.get(FinancialRepository);
+  paymentRepository = moduleFixture.get(PaymentRepository);
   userRepository = moduleFixture.get(UserRepository);
 });
 
@@ -130,131 +126,108 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
-  await financialRepository.clear();
-  await companyRepository.clear();
+  await paymentRepository.clear();
   await userRepository.clear();
 });
 
-describe('Financials CRUD', () => {
-  it('should be able to create a Financial for any company with an authenticated admin user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await createUser(UserRole.USER);
-    await userRepository.findOne({
-      email: 'admin@email.com',
-    });
-
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
+describe('Payment methods CRUD', () => {
+  it('should be able to create a new payment method', async () => {
+    const jwtToken = await createAndAuthenticateUser(UserRole.USER);
 
     await request(app.getHttpServer())
-      .post('/financials')
+      .post('/payments')
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
-        company: company.uuid,
+        name: 'Test payment',
+        type: 'credit_card',
       })
-      .expect(201);
+      .expect(HttpStatus.CREATED);
   });
 
-  it('should be able to create a Financial to the linked company with an authenticated normal user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.USER);
-    const user = await userRepository.findOne({ email: 'user@email.com' });
-
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
-
+  it('should not be able to create a new payment method without authentication', async () => {
     await request(app.getHttpServer())
-      .post('/financials')
-      .set('Authorization', `Bearer ${jwtToken}`)
+      .post('/payments')
       .send({
-        company: company.uuid,
+        name: 'Test payment',
+        type: 'credit_card',
       })
-      .expect(201);
+      .expect(HttpStatus.UNAUTHORIZED);
   });
 
-  it('should not be able to create a Financial for an unlinked company with an authenticated normal user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.USER);
-    const userAdmin = await createUser(UserRole.ADMIN);
-    await userRepository.findOne({
-      email: 'user@email.com',
-    });
+  it('should be able to get a payment method by uuid', async () => {
+    const jwtToken = await createAndAuthenticateUser(UserRole.USER);
 
-    const company = await companyRepository.createCompany(userAdmin.id, {
-      name: 'Company',
+    const payment = await paymentRepository.createPayment({
+      name: 'Test payment',
+      type: 'credit_card',
     });
 
     await request(app.getHttpServer())
-      .post('/financials')
+      .get('/payments/' + payment.uuid)
       .set('Authorization', `Bearer ${jwtToken}`)
-      .send({
-        company: company.uuid,
-      })
-      .expect(HttpStatus.FORBIDDEN);
-  });
-
-  it('should be able to find a Financial by company and date with an authenticated admin user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await createUser(UserRole.USER);
-    await userRepository.findOne({
-      email: 'admin@email.com',
-    });
-
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
-
-    const another_company = await companyRepository.createCompany(user.id, {
-      name: 'Company2',
-    });
-
-    await financialRepository.createFinancial(user.id, {
-      company: company.uuid,
-    });
-
-    const financial2 = await financialRepository.createFinancial(user.id, {
-      company: another_company.uuid,
-    });
-
-    const financial3 = await financialRepository.createFinancial(user.id, {
-      company: another_company.uuid,
-    });
-
-    const date_now = new Date().toISOString().split('T')[0];
-    await request(app.getHttpServer())
-      .get(
-        '/financials?company=' +
-          another_company.uuid +
-          '&created_at=' +
-          date_now,
-      )
-      .set('Authorization', `Bearer ${jwtToken}`)
-      .accept('application/json')
       .expect(HttpStatus.OK)
       .then((response) => {
-        expect(response.body.financials.length).toBe(2);
-        expect(response.body.financials[0].uuid).toBe(financial2.uuid);
-        expect(response.body.financials[1].uuid).toBe(financial3.uuid);
-        expect(response.body.total).toBe(2);
+        expect(response.body.name).toBe('Test payment');
+        expect(response.body.type).toBe('credit_card');
       });
   });
 
-  it('should be able to delete a Financial with an authenticated admin user', async () => {
-    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await userRepository.findOne({
-      email: 'admin@email.com',
+  it('should be able to find a payment method by name and type', async () => {
+    const jwtToken = await createAndAuthenticateUser(UserRole.USER);
+
+    await paymentRepository.createPayment({
+      name: 'Test payment',
+      type: 'credit_card',
     });
 
-    const company = await companyRepository.createCompany(user.id, {
-      name: 'Company',
-    });
-
-    const financial = await financialRepository.createFinancial(user.id, {
-      company: company.uuid,
+    await paymentRepository.createPayment({
+      name: 'Test payment cash',
+      type: 'cash',
     });
 
     await request(app.getHttpServer())
-      .delete(`/financials/${financial.uuid}`)
+      .get('/payments?name=Test%20payment&type=credit_card')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(HttpStatus.OK)
+      .then((response) => {
+        expect(response.body.total).toBe(1);
+        expect(response.body.payments[0].name).toBe('Test payment');
+        expect(response.body.payments[0].type).toBe('credit_card');
+        expect(response.body.payments.length).toBe(1);
+      });
+  });
+
+  it('should be able to update a payment method', async () => {
+    const jwtToken = await createAndAuthenticateUser(UserRole.USER);
+
+    const payment = await paymentRepository.createPayment({
+      name: 'Test payment',
+      type: 'credit_card',
+    });
+
+    await request(app.getHttpServer())
+      .patch('/payments/' + payment.uuid)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .send({
+        name: 'Test payment updated',
+      })
+      .expect(HttpStatus.OK)
+      .then((response) => {
+        expect(response.body.name).toBe('Test payment updated');
+        expect(response.body.type).toBe('credit_card');
+      });
+  });
+
+  it('should be able to delete a payment method', async () => {
+    const jwtToken = await createAndAuthenticateUser(UserRole.USER);
+
+    const payment = await paymentRepository.createPayment({
+      name: 'Test payment',
+      type: 'credit_card',
+    });
+
+    await request(app.getHttpServer())
+      .delete('/payments/' + payment.uuid)
       .set('Authorization', `Bearer ${jwtToken}`)
       .expect(HttpStatus.OK);
   });

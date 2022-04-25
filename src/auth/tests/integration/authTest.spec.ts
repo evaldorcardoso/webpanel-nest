@@ -13,6 +13,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UserRole } from 'src/users/user-roles.enum';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 import { Financial } from 'src/financials/entities/financial.entity';
+import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
+import { FinancialDetailRepository } from 'src/financial-details/repositories/financial-detail.repository';
 
 const adminUser = {
   name: 'Admin',
@@ -55,11 +57,15 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User, Company, Financial],
+        entities: [User, Company, Financial, FinancialDetail],
         logging: false,
         synchronize: true,
       }),
-      TypeOrmModule.forFeature([UserRepository, FinancialRepository]),
+      TypeOrmModule.forFeature([
+        UserRepository,
+        FinancialRepository,
+        FinancialDetailRepository,
+      ]),
       AuthModule,
     ],
   }).compile();
