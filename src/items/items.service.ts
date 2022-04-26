@@ -32,11 +32,19 @@ export class ItemsService {
     return item;
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async update(uuid: string, updateItemDto: UpdateItemDto): Promise<Item> {
+    const result = await this.itemRepository.update({ uuid }, updateItemDto);
+    if (result.affected === 0) {
+      throw new NotFoundException('Item não encontrado');
+    }
+    const item = await this.findOne(uuid);
+    return item;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(uuid: string) {
+    const result = await this.itemRepository.delete({ uuid });
+    if (result.affected === 0) {
+      throw new NotFoundException('Item não encontrado');
+    }
   }
 }

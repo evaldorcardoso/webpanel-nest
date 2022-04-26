@@ -251,129 +251,108 @@ describe('Items CRUD', () => {
       });
   });
 
-  // it('should be able to update a company with an authenticated admin user', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'admin@email.com',
-  //     },
-  //   });
-  //   const company = await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+  it('should be able to update an item', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const item = await itemRepository.createItem({
+      name: 'Item 1',
+      price: 100,
+      is_active: true,
+    });
 
-  //   await request(app.getHttpServer())
-  //     .patch(`/companies/${company.uuid}`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send({ name: 'Company Altered' })
-  //     .expect(HttpStatus.OK)
-  //     .then((res) => {
-  //       expect(res.body.name).toBe('Company Altered');
-  //     });
-  // });
+    await request(app.getHttpServer())
+      .patch(`/items/${item.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({ name: 'Item 1 Updated', price: 200 })
+      .expect(HttpStatus.OK)
+      .then((res) => {
+        expect(res.body.name).toBe('Item 1 Updated');
+        expect(res.body.price).toBe(200);
+      });
+  });
 
-  // it('should not be able to update a company with an authenticated normal user', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.USER);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'user@email.com',
-  //     },
-  //   });
-  //   const company = await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+  it('should not be able to update an item with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+    const item = await itemRepository.createItem({
+      name: 'item 1',
+      price: 100,
+      is_active: true,
+    });
 
-  //   await request(app.getHttpServer())
-  //     .patch(`/companies/${company.uuid}`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send({ name: 'Company Altered' })
-  //     .expect(HttpStatus.FORBIDDEN);
-  // });
+    await request(app.getHttpServer())
+      .patch(`/items/${item.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({ name: 'Item 1 updated' })
+      .expect(HttpStatus.FORBIDDEN);
+  });
 
-  // it('should not be able to update a company with an invalid uuid', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'admin@email.com',
-  //     },
-  //   });
-  //   await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+  it('should not be able to update an item with an invalid uuid', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
 
-  //   await request(app.getHttpServer())
-  //     .patch(`/companies/1234567890`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send({ name: 'Company Altered' })
-  //     .expect(HttpStatus.NOT_FOUND);
-  // });
+    await request(app.getHttpServer())
+      .patch(`/items/1234567890`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send({ name: 'Item updated' })
+      .expect(HttpStatus.NOT_FOUND);
+  });
 
-  // it('should be able to delete a company with an authenticated admin user', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'admin@email.com',
-  //     },
-  //   });
-  //   let company = await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+  it('should be able to delete an item with an authenticated admin user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    let item = await itemRepository.createItem({
+      name: 'item 1',
+      price: 100,
+      is_active: true,
+    });
 
-  //   await request(app.getHttpServer())
-  //     .delete(`/companies/${company.uuid}`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send()
-  //     .expect(HttpStatus.OK);
+    await request(app.getHttpServer())
+      .delete(`/items/${item.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send()
+      .expect(HttpStatus.OK);
 
-  //   company = await companyRepository.findOne(company.id);
-  //   expect(company).toBeUndefined();
-  // });
+    item = await itemRepository.findOne(item.id);
+    expect(item).toBeUndefined();
+  });
 
-  // it('should not be able to delete a company with an invalid uuid', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'admin@email.com',
-  //     },
-  //   });
-  //   let company = await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+  it('should not be able to delete an item with an invalid uuid', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
 
-  //   await request(app.getHttpServer())
-  //     .delete(`/companies/1234567890`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send()
-  //     .expect(HttpStatus.NOT_FOUND);
+    let item = await itemRepository.createItem({
+      name: 'item 1',
+      price: 100,
+      is_active: true,
+    });
 
-  //   company = await companyRepository.findOne(company.id);
-  //   expect(company).toBeTruthy();
-  // });
+    await request(app.getHttpServer())
+      .delete(`/items/1234567890`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send()
+      .expect(HttpStatus.NOT_FOUND);
 
-  // it('should not be able to delete a company with an authenticated normal user', async () => {
-  //   jwtToken = await createAndAuthenticateUser(UserRole.USER);
-  //   const user = await userRepository.findOne({
-  //     where: {
-  //       email: 'user@email.com',
-  //     },
-  //   });
-  //   let company = await companyRepository.createCompany(user.id, {
-  //     name: 'Company 1',
-  //   });
+    item = await itemRepository.findOne(item.id);
+    expect(item).toBeTruthy();
+  });
 
-  //   await request(app.getHttpServer())
-  //     .delete(`/companies/${company.uuid}`)
-  //     .set('Authorization', `Bearer ${jwtToken}`)
-  //     .accept('application/json')
-  //     .send()
-  //     .expect(HttpStatus.FORBIDDEN);
+  it('should not be able to delete an item with an authenticated normal user', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.USER);
+    let item = await itemRepository.createItem({
+      name: 'item 1',
+      price: 100,
+      is_active: true,
+    });
 
-  //   company = await companyRepository.findOne(company.id);
-  //   expect(company).toBeTruthy();
-  // });
+    await request(app.getHttpServer())
+      .delete(`/items/${item.uuid}`)
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .accept('application/json')
+      .send()
+      .expect(HttpStatus.FORBIDDEN);
+
+    item = await itemRepository.findOne(item.id);
+    expect(item).toBeTruthy();
+  });
 });

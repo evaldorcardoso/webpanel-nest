@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
@@ -60,13 +61,24 @@ export class ItemsController {
     return new ReturnFindItemsDto(data);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(+id, updateItemDto);
+  @Patch(':uuid')
+  @ApiOperation({ summary: 'Update the item data' })
+  @ApiOkResponse({ type: ReturnItemDto })
+  @Role(UserRole.ADMIN)
+  async update(
+    @Param('uuid') uuid: string,
+    @Body(ValidationPipe) updateItemDto: UpdateItemDto,
+  ): Promise<ReturnItemDto> {
+    return new ReturnItemDto(
+      await this.itemsService.update(uuid, updateItemDto),
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(+id);
+  @Delete(':uuid')
+  @ApiOperation({ summary: 'Delete an item' })
+  @ApiOkResponse()
+  @Role(UserRole.ADMIN)
+  async remove(@Param('uuid') uuid: string) {
+    await this.itemsService.remove(uuid);
   }
 }
