@@ -295,14 +295,6 @@ describe('Companies CRUD', () => {
 
   it('should not be able to get a company by uuid with an invalid uuid', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
-    const user = await userRepository.findOne({
-      where: {
-        email: 'admin@email.com',
-      },
-    });
-    await companyRepository.createCompany(user.id, {
-      name: 'Company 1',
-    });
 
     await request(app.getHttpServer())
       .get(`/companies/1234567890`)
