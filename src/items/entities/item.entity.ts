@@ -1,9 +1,11 @@
+import { ItemsInventory } from 'src/items-inventory/entities/items-inventory.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
   Generated,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -33,4 +35,7 @@ export class Item extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => ItemsInventory, (itemsInventory) => itemsInventory.item)
+  itemsInventory: ItemsInventory[];
 }

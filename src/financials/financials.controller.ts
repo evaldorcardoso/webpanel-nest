@@ -21,7 +21,6 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { ReturnFinancialDto } from './dto/return-financial.dto';

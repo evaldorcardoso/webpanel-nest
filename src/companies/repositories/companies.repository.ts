@@ -25,7 +25,7 @@ export class CompanyRepository extends Repository<Company> {
     query.skip((queryDto.page - 1) * queryDto.limit);
     query.take(+queryDto.limit);
     query.orderBy(queryDto.sort ? JSON.parse(queryDto.sort) : undefined);
-    query.select(['company.name']);
+    query.select(['company.uuid', 'company.name']);
 
     const [companies, total] = await query.getManyAndCount();
 

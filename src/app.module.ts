@@ -16,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
 import { FinancialDetailsModule } from './financial-details/financial-details.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ItemsModule } from './items/items.module';
+import { ItemsInventoryModule } from './items-inventory/items-inventory.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ItemsModule } from './items/items.module';
     FinancialDetailsModule,
     PaymentsModule,
     ItemsModule,
+    ItemsInventoryModule,
   ],
   controllers: [],
   providers: [

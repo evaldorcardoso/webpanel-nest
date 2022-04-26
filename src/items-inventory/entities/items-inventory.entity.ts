@@ -1,4 +1,4 @@
-import { Financial } from 'src/financials/entities/financial.entity';
+import { Item } from 'src/items/entities/item.entity';
 import {
   BaseEntity,
   Column,
@@ -7,10 +7,11 @@ import {
   Generated,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class FinancialDetail extends BaseEntity {
+export class ItemsInventory extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -18,15 +19,21 @@ export class FinancialDetail extends BaseEntity {
   @Generated('uuid')
   uuid: string;
 
-  @Column({ nullable: false, type: 'decimal' })
-  value: number;
+  @Column({ nullable: false, type: 'varchar' })
+  company: string;
 
-  @ManyToOne(() => Financial, (financial) => financial.financialDetails, {
+  @Column({ nullable: false, type: 'decimal' })
+  quantity: number;
+
+  @ManyToOne(() => Item, (item) => item.itemsInventory, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  financial: Financial;
+  item: Item;
 
   @CreateDateColumn()
   created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }
