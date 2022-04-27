@@ -191,7 +191,7 @@ describe('Items Inventory CRUD', () => {
       .expect(HttpStatus.CREATED);
   });
 
-  it('should be able to update an Item Inventory of a company', async () => {
+  it('should be able to find an Item Inventory of a company by uuid with an authenticated admin User', async () => {
     jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
     const user = await userRepository.findOne({
       email: 'admin@email.com',
@@ -218,17 +218,151 @@ describe('Items Inventory CRUD', () => {
     );
 
     await request(app.getHttpServer())
-      .patch('/items-inventory/' + item.uuid + '/company/' + company.uuid)
+      .get(
+        '/items-inventory/' +
+          itemsInventory[0].uuid +
+          '/company/' +
+          company.uuid,
+      )
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(HttpStatus.OK)
+      .then((response) => {
+        expect(response.body.quantity).toBe(itemsInventory[0].quantity);
+        expect(response.body.item).toBe(item.uuid);
+        expect(response.body.uuid).toBe(itemsInventory[0].uuid);
+      });
+  });
+
+  it('should be able to search Items Inventory of a company by quantity with an authenticated admin User', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      email: 'admin@email.com',
+    });
+
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company',
+    });
+
+    const item = await itemRepository.createItem({
+      name: 'Item',
+      price: 100,
+      is_active: true,
+    });
+
+    const itemsInventory = await itemsInventoryRepository.createItemInventory(
+      company.uuid,
+      [
+        {
+          item: item.uuid,
+          quantity: 10,
+        },
+        {
+          item: item.uuid,
+          quantity: 20,
+        },
+        {
+          item: item.uuid,
+          quantity: 10,
+        },
+      ],
+    );
+
+    await request(app.getHttpServer())
+      .get('/items-inventory/company/' + company.uuid + '?quantity=10')
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(HttpStatus.OK)
+      .then((response) => {
+        expect(response.body.total).toBe(2);
+        expect(response.body.itemsInventory.length).toBe(2);
+        expect(response.body.itemsInventory[0].uuid).toBe(
+          itemsInventory[0].uuid,
+        );
+        expect(response.body.itemsInventory[1].uuid).toBe(
+          itemsInventory[2].uuid,
+        );
+      });
+  });
+
+  it('should be able to update an Item Inventory of a company with an authenticated admin User', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      email: 'admin@email.com',
+    });
+
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company',
+    });
+
+    const item = await itemRepository.createItem({
+      name: 'Item',
+      price: 100,
+      is_active: true,
+    });
+
+    const itemsInventory = await itemsInventoryRepository.createItemInventory(
+      company.uuid,
+      [
+        {
+          item: item.uuid,
+          quantity: 10,
+        },
+      ],
+    );
+
+    await request(app.getHttpServer())
+      .patch(
+        '/items-inventory/' +
+          itemsInventory[0].uuid +
+          '/company/' +
+          company.uuid,
+      )
       .set('Authorization', `Bearer ${jwtToken}`)
       .send({
         item: item.uuid,
         quantity: 20,
       })
       .expect(HttpStatus.OK)
-      .expect((response) => {
+      .then((response) => {
         expect(response.body.quantity).toBe(20);
         expect(response.body.item).toBe(item.uuid);
         expect(response.body.uuid).toBe(itemsInventory[0].uuid);
       });
+  });
+
+  it('should be able to delete an Item Inventory of a company with an authenticated admin User', async () => {
+    jwtToken = await createAndAuthenticateUser(UserRole.ADMIN);
+    const user = await userRepository.findOne({
+      email: 'admin@email.com',
+    });
+
+    const company = await companyRepository.createCompany(user.id, {
+      name: 'Company',
+    });
+
+    const item = await itemRepository.createItem({
+      name: 'Item',
+      price: 100,
+      is_active: true,
+    });
+
+    const itemsInventory = await itemsInventoryRepository.createItemInventory(
+      company.uuid,
+      [
+        {
+          item: item.uuid,
+          quantity: 10,
+        },
+      ],
+    );
+
+    await request(app.getHttpServer())
+      .delete(
+        '/items-inventory/' +
+          itemsInventory[0].uuid +
+          '/company/' +
+          company.uuid,
+      )
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .expect(HttpStatus.OK);
   });
 });

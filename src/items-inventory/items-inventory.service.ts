@@ -61,25 +61,27 @@ export class ItemsInventoryService {
     company_uuid: string,
     updateItemsInventoryDto: UpdateItemsInventoryDto,
   ): Promise<ItemsInventory> {
-    const item = await this.itemsInventoryRepository.findOne({
+    const itemInventory = await this.itemsInventoryRepository.findOne({
       where: {
         uuid,
         company: company_uuid,
       },
       select: ['id'],
     });
-    if (!item) {
+
+    if (!itemInventory) {
       throw new NotFoundException('Lançamento não encontrado');
     }
 
+    const { quantity } = updateItemsInventoryDto;
     const result = await this.itemsInventoryRepository.update(
-      item.id,
-      updateItemsInventoryDto,
+      itemInventory.id,
+      { quantity },
     );
     if (result.affected === 0) {
       throw new NotFoundException('Lançamento não encontrado');
     }
-    return await this.itemsInventoryRepository.findOne(item.id, {
+    return await this.itemsInventoryRepository.findOne(itemInventory.id, {
       relations: ['item'],
     });
   }

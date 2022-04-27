@@ -17,6 +17,7 @@ import { FinancialDetailRepository } from 'src/financial-details/repositories/fi
 import { ItemRepository } from 'src/items/repositories/items.repository';
 import { ItemsModule } from 'src/items/items.module';
 import { Item } from 'src/items/entities/item.entity';
+import { ItemsInventory } from 'src/items-inventory/entities/items-inventory.entity';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {
@@ -101,13 +102,14 @@ beforeAll(async () => {
       TypeOrmModule.forRoot({
         type: 'sqlite',
         database: ':memory:',
-        entities: [User, Item, Financial, FinancialDetail],
+        entities: [User, Item, ItemsInventory, Financial, FinancialDetail],
         synchronize: true,
         logging: false,
       }),
       TypeOrmModule.forFeature([
         UserRepository,
         ItemRepository,
+        ItemsInventory,
         FinancialRepository,
         FinancialDetailRepository,
       ]),
