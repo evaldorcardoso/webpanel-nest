@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -13,6 +14,7 @@ import {
 
 @Entity()
 @Unique(['name'])
+@Index(['id', 'uuid', 'is_active'])
 export class Item extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;

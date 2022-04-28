@@ -4,6 +4,7 @@ import {
   Column,
   Entity,
   Generated,
+  Index,
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
@@ -12,6 +13,7 @@ import {
 
 @Entity()
 @Unique(['name'])
+@Index(['id', 'uuid'])
 export class Company extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;

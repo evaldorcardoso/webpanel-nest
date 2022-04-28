@@ -5,12 +5,14 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
+@Index(['id', 'uuid'])
 export class ItemsInventory extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;

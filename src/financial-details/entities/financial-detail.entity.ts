@@ -5,11 +5,13 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
+@Index(['id', 'uuid'])
 export class FinancialDetail extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;

@@ -4,12 +4,14 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  Index,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 
 @Entity()
 @Unique(['name'])
+@Index(['id', 'uuid'])
 export class Payment extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;

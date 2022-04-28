@@ -6,12 +6,14 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
+@Index(['id', 'uuid'])
 export class Financial extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
