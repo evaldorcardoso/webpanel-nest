@@ -20,7 +20,7 @@ export class UpdateUserDto {
   )
   email: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ enum: UserRole, required: false })
   @IsOptional()
   role: UserRole;
 

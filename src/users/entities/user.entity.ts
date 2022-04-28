@@ -12,6 +12,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Financial } from '../../financials/entities/financial.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '../user-roles.enum';
 
 @Entity()
 @Unique(['email'])
@@ -35,9 +36,8 @@ export class User extends BaseEntity {
   @ApiProperty()
   name: string;
 
-  @Column({ nullable: false, type: 'varchar', length: 20 })
-  @ApiProperty()
-  role: string;
+  @Column({ type: 'simple-enum', enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 
   @Column({ nullable: false, default: true })
   @ApiProperty()
