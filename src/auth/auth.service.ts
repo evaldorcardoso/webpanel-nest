@@ -63,8 +63,46 @@ export class AuthService {
       uuid: user.uuid,
     };
     const token = await this.JwtService.sign(jwtPayload);
+    let refresh_token = await this.JwtService.sign(jwtPayload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN'),
+    });
+
+    refresh_token = await this.userRepository.updateRefreshToken(
+      user.uuid,
+      refresh_token,
+    );
+
+    return { token, refresh_token };
+  }
+
+  async refreshToken(user: User, refreshToken: string) {
+    user = await this.userRepository.findOne({ uuid: user.uuid });
+    if (!user.is_active) {
+      throw new UnauthorizedException('Usuário inativo');
+    }
+
+    const isValid = await this.userRepository.checkRefreshToken(
+      user,
+      refreshToken,
+    );
+
+    if (!isValid) {
+      throw new UnauthorizedException('Refresh Token inválido');
+    }
+
+    const jwtPayload = {
+      uuid: user.uuid,
+    };
+    const token = await this.JwtService.sign(jwtPayload);
 
     return { token };
+  }
+
+  async removeRefreshToken(user: User) {
+    await this.userRepository.update(user.id, {
+      current_hashed_refresh_token: null,
+    });
   }
 
   async confirmEmail(confirmation_token: string): Promise<User> {

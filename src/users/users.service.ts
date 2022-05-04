@@ -65,4 +65,11 @@ export class UsersService {
   ): Promise<{ users: User[]; total: number }> {
     return await this.userRepository.findUsers(queryDto);
   }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, uuid: string) {
+    return await this.userRepository.getUserIfRefreshTokenMatches(
+      refreshToken,
+      uuid,
+    );
+  }
 }

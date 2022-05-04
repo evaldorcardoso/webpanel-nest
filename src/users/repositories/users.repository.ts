@@ -101,6 +101,40 @@ export class UserRepository extends Repository<User> {
     }
   }
 
+  async checkRefreshToken(user: User, refreshToken: string): Promise<boolean> {
+    // console.log(user.current_hashed_refresh_token);
+    return await bcrypt.compare(
+      refreshToken,
+      user.current_hashed_refresh_token,
+    );
+  }
+
+  async getUserIfRefreshTokenMatches(refreshToken: string, uuid: string) {
+    const user = await this.findOne({ uuid });
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      refreshToken,
+      user.current_hashed_refresh_token,
+    );
+
+    if (isRefreshTokenValid) {
+      return user;
+    }
+  }
+
+  async updateRefreshToken(
+    uuid: string,
+    refresh_token: string,
+  ): Promise<string> {
+    const user = await this.findOne({ uuid });
+    user.current_hashed_refresh_token = await this.hashPassword(
+      refresh_token,
+      user.salt,
+    );
+    await user.save();
+    return user.current_hashed_refresh_token;
+  }
+
   private async hashPassword(password: string, salt: string): Promise<string> {
     return bcrypt.hash(password, salt);
   }

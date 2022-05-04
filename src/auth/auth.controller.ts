@@ -30,6 +30,8 @@ import { CredentialsDto } from './dto/credentials.dto';
 import { ReturnAuthDto } from './dto/return-auth.dto';
 import { ReturnMessageDto } from './dto/return-message.dto';
 import { GetUser } from './get-user.decorator';
+import { JwtGuard } from './jwt.guard';
+import JwtRefreshGuard from './jwt.refresh.guard';
 import { Role } from './role.decorator';
 import { RolesGuard } from './roles.guard';
 
@@ -62,6 +64,15 @@ export class AuthController {
     @Body(ValidationPipe) credentialsDto: CredentialsDto,
   ): Promise<ReturnAuthDto> {
     return await this.authService.signIn(credentialsDto);
+  }
+
+  @Post('/refresh-token')
+  @UseGuards(AuthGuard())
+  async refreshToken(
+    @GetUser() user: User,
+    @Body('refresh_token') refreshToken: string,
+  ) {
+    return await this.authService.refreshToken(user, refreshToken);
   }
 
   @Get('/me')

@@ -13,6 +13,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Financial } from '../../financials/entities/financial.entity';
 import { UserRole } from '../user-roles.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 @Unique(['email'])
@@ -48,6 +49,10 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
   recover_token: string;
+
+  @Column({ nullable: true })
+  @Exclude()
+  current_hashed_refresh_token?: string;
 
   @CreateDateColumn()
   created_at: Date;
