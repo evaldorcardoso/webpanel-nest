@@ -1,20 +1,20 @@
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
-import { mailerConfig } from 'src/configs/mailer.config';
+import { mailerConfig } from '../src/configs/mailer.config';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
-import { Company } from 'src/companies/entities/company.entity';
-import { User } from 'src/users/user.entity';
-import { UserRepository } from 'src/users/users.repository';
-import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from '../src/auth/auth.module';
+import { Company } from '../src/companies/entities/company.entity';
+import { User } from '../src/users/user.entity';
+import { UserRepository } from '../src/users/users.repository';
+import { UsersModule } from '../src/users/users.module';
 import * as request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { UserRole } from 'src/users/user-roles.enum';
-import { FinancialRepository } from 'src/financials/repositories/financial.repository';
-import { Financial } from 'src/financials/entities/financial.entity';
-import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
-import { FinancialDetailRepository } from 'src/financial-details/repositories/financial-detail.repository';
+import { UserRole } from '../src/users/user-roles.enum';
+import { FinancialRepository } from '../src/financials/repositories/financial.repository';
+import { Financial } from '../src/financials/entities/financial.entity';
+import { FinancialDetail } from '../src/financial-details/entities/financial-detail.entity';
+import { FinancialDetailRepository } from '../src/financial-details/repositories/financial-detail.repository';
 
 const adminUser = {
   name: 'Admin',
