@@ -17,11 +17,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Role } from 'src/auth/role.decorator';
+import { Role } from '../auth/role.decorator';
 import { UserRole } from './user-roles.enum';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from './entities/user.entity';
+import { RolesGuard } from '../auth/roles.guard';
+import { GetUser } from '../auth/get-user.decorator';
+import { User } from './user.entity';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
 import {
   ApiBearerAuth,

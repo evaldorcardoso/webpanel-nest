@@ -12,8 +12,8 @@ import { FinancialRepository } from 'src/financials/repositories/financial.repos
 import { Payment } from 'src/payments/entities/payment.entity';
 import { PaymentsModule } from 'src/payments/payments.module';
 import { PaymentRepository } from 'src/payments/repositories/payment.repository';
-import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/repositories/users.repository';
+import { User } from 'src/users/user.entity';
+import { UserRepository } from 'src/users/users.repository';
 import { UserRole } from 'src/users/user-roles.enum';
 import { UsersModule } from 'src/users/users.module';
 import * as request from 'supertest';

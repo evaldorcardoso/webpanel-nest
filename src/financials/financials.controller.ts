@@ -15,7 +15,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Role } from 'src/auth/role.decorator';
 import { UserRole } from 'src/users/user-roles.enum';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/users/user.entity';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,

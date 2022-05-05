@@ -1,5 +1,5 @@
 import { define } from 'typeorm-seeding';
-import { User } from '../users/entities/user.entity';
+import { User } from '../users/user.entity';
 import * as bcrypt from 'bcrypt';
 import { UserRole } from 'src/users/user-roles.enum';
 

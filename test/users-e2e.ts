@@ -1,19 +1,19 @@
+import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
-import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/repositories/users.repository';
-import { UserRole } from 'src/users/user-roles.enum';
-import { UsersModule } from 'src/users/users.module';
-import { MailerModule, MailerService } from '@nestjs-modules/mailer';
-import { mailerConfig } from 'src/configs/mailer.config';
+import { AuthModule } from '../src/auth/auth.module';
+import { mailerConfig } from '../src/configs/mailer.config';
+import { FinancialDetail } from '../src/financial-details/entities/financial-detail.entity';
+import { FinancialDetailRepository } from '../src/financial-details/repositories/financial-detail.repository';
+import { Financial } from '../src/financials/entities/financial.entity';
+import { FinancialRepository } from '../src/financials/repositories/financial.repository';
+import { User } from '../src/users/user.entity';
+import { UserRepository } from '../src/users/users.repository';
+import { UserRole } from '../src/users/user-roles.enum';
+import { UsersModule } from '../src/users/users.module';
 import * as request from 'supertest';
-import { Financial } from 'src/financials/entities/financial.entity';
-import { FinancialRepository } from 'src/financials/repositories/financial.repository';
-import { FinancialDetail } from 'src/financial-details/entities/financial-detail.entity';
-import { FinancialDetailRepository } from 'src/financial-details/repositories/financial-detail.repository';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {

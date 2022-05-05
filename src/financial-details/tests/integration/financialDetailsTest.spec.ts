@@ -13,8 +13,8 @@ import { FinancialDetailRepository } from 'src/financial-details/repositories/fi
 import { Financial } from 'src/financials/entities/financial.entity';
 import { FinancialsModule } from 'src/financials/financials.module';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
-import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/repositories/users.repository';
+import { User } from 'src/users/user.entity';
+import { UserRepository } from 'src/users/users.repository';
 import { UserRole } from 'src/users/user-roles.enum';
 import { UsersModule } from 'src/users/users.module';
 import * as request from 'supertest';

@@ -2,7 +2,7 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { FindCompaniesQueryDto } from '../dto/find-companies-query.dto';

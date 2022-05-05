@@ -11,8 +11,8 @@ import {
   Index,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Financial } from '../../financials/entities/financial.entity';
-import { UserRole } from '../user-roles.enum';
+import { Financial } from '../financials/entities/financial.entity';
+import { UserRole } from './user-roles.enum';
 
 @Entity()
 @Unique(['email'])

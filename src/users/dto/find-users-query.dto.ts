@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseQueryParametersDto } from 'src/shared/dto/base-query-parameters.dto';
+import { BaseQueryParametersDto } from '../../shared/dto/base-query-parameters.dto';
 import { UserRole } from '../user-roles.enum';
 
 export class FindUsersQueryDto extends BaseQueryParametersDto {

@@ -20,10 +20,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { ReturnUserDto } from 'src/users/dto/return-user.dto';
-import { User } from 'src/users/entities/user.entity';
-import { UserRole } from 'src/users/user-roles.enum';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { ReturnUserDto } from '../users/dto/return-user.dto';
+import { User } from '../users/user.entity';
+import { UserRole } from '../users/user-roles.enum';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CredentialsDto } from './dto/credentials.dto';

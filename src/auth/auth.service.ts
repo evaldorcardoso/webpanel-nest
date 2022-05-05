@@ -5,10 +5,10 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
-import { UserRepository } from 'src/users/repositories/users.repository';
-import { UserRole } from 'src/users/user-roles.enum';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { User } from '../users/user.entity';
+import { UserRepository } from '../users/users.repository';
+import { UserRole } from '../users/user-roles.enum';
 import { CredentialsDto } from './dto/credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';

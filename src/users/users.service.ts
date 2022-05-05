@@ -4,9 +4,9 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './repositories/users.repository';
+import { UserRepository } from './users.repository';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 import { UserRole } from './user-roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { FindUsersQueryDto } from './dto/find-users-query.dto';
