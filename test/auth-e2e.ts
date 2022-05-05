@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '../src/auth/auth.module';
-import { Company } from '../src/companies/entities/company.entity';
+import { Company } from '../src/companies/company.entity';
 import { User } from '../src/users/user.entity';
 import { UserRepository } from '../src/users/users.repository';
 import { UsersModule } from '../src/users/users.module';

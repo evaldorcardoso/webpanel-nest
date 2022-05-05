@@ -18,11 +18,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { Role } from 'src/auth/role.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { User } from 'src/users/user.entity';
-import { UserRole } from 'src/users/user-roles.enum';
+import { GetUser } from '../auth/get-user.decorator';
+import { Role } from '../auth/role.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import { User } from '../users/user.entity';
+import { UserRole } from '../users/user-roles.enum';
 import { CompaniesService } from './companies.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { FindCompaniesQueryDto } from './dto/find-companies-query.dto';

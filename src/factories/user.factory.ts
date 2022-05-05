@@ -1,7 +1,7 @@
 import { define } from 'typeorm-seeding';
 import { User } from '../users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { UserRole } from 'src/users/user-roles.enum';
+import { UserRole } from '../users/user-roles.enum';
 
 define(User, () => {
   const user = new User();

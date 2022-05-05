@@ -2,11 +2,11 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateCompanyDto } from '../dto/create-company.dto';
-import { FindCompaniesQueryDto } from '../dto/find-companies-query.dto';
-import { Company } from '../entities/company.entity';
+import { CreateCompanyDto } from './dto/create-company.dto';
+import { FindCompaniesQueryDto } from './dto/find-companies-query.dto';
+import { Company } from './company.entity';
 
 @EntityRepository(Company)
 export class CompanyRepository extends Repository<Company> {
