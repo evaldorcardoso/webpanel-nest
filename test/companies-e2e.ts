@@ -15,8 +15,8 @@ import { CompanyRepository } from '../src/companies/companies.repository';
 import { Company } from '../src/companies/company.entity';
 import { Financial } from '../src/financials/entities/financial.entity';
 import { FinancialRepository } from '../src/financials/repositories/financial.repository';
-import { FinancialDetail } from '../src/financial-details/entities/financial-detail.entity';
-import { FinancialDetailRepository } from '../src/financial-details/repositories/financial-detail.repository';
+import { FinancialDetail } from '../src/financial-details/financial-detail.entity';
+import { FinancialDetailRepository } from '../src/financial-details/financial-detail.repository';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {

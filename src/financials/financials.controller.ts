@@ -11,11 +11,11 @@ import {
 import { FinancialsService } from './financials.service';
 import { CreateFinancialDto } from './dto/create-financial.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Role } from 'src/auth/role.decorator';
-import { UserRole } from 'src/users/user-roles.enum';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/users/user.entity';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from '../auth/role.decorator';
+import { UserRole } from '../users/user-roles.enum';
+import { GetUser } from '../auth/get-user.decorator';
+import { User } from '../users/user.entity';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -26,10 +26,10 @@ import {
 import { ReturnFinancialDto } from './dto/return-financial.dto';
 import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
 import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
-import { FinancialDetailsService } from 'src/financial-details/financial-details.service';
-import { CreateFinancialDetailDto } from 'src/financial-details/dto/create-financial-detail.dto';
+import { FinancialDetailsService } from '../financial-details/financial-details.service';
+import { CreateFinancialDetailDto } from '../financial-details/dto/create-financial-detail.dto';
 import { ReturnFinancialCompleteDto } from './dto/return-financial-complete.dto';
-import { ReturnFinancialDetailDto } from 'src/financial-details/dto/return-financial-detail.dto';
+import { ReturnFinancialDetailDto } from '../financial-details/dto/return-financial-detail.dto';
 
 @ApiTags('Financials')
 @ApiBearerAuth()

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ReturnFinancialDetailDto } from 'src/financial-details/dto/return-financial-detail.dto';
+import { ReturnFinancialDetailDto } from '../../financial-details/dto/return-financial-detail.dto';
 import { Financial } from '../entities/financial.entity';
 
 export class ReturnFinancialCompleteDto {

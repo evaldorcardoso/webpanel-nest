@@ -13,8 +13,8 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UserRole } from '../src/users/user-roles.enum';
 import { FinancialRepository } from '../src/financials/repositories/financial.repository';
 import { Financial } from '../src/financials/entities/financial.entity';
-import { FinancialDetail } from '../src/financial-details/entities/financial-detail.entity';
-import { FinancialDetailRepository } from '../src/financial-details/repositories/financial-detail.repository';
+import { FinancialDetail } from '../src/financial-details/financial-detail.entity';
+import { FinancialDetailRepository } from '../src/financial-details/financial-detail.repository';
 
 const adminUser = {
   name: 'Admin',

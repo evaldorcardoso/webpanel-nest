@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { FinancialDetail } from '../entities/financial-detail.entity';
+import { FinancialDetail } from './financial-detail.entity';
 
 @EntityRepository(FinancialDetail)
 export class FinancialDetailRepository extends Repository<FinancialDetail> {

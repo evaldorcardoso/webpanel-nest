@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FinancialRepository } from 'src/financials/repositories/financial.repository';
+import { FinancialRepository } from '../financials/repositories/financial.repository';
 import { CreateFinancialDetailDto } from './dto/create-financial-detail.dto';
-import { FinancialDetailRepository } from './repositories/financial-detail.repository';
+import { FinancialDetailRepository } from './financial-detail.repository';
 
 @Injectable()
 export class FinancialDetailsService {

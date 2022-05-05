@@ -1,4 +1,4 @@
-import { FinancialDetail } from '../../financial-details/entities/financial-detail.entity';
+import { FinancialDetail } from '../../financial-details/financial-detail.entity';
 import { User } from '../../users/user.entity';
 import {
   BaseEntity,

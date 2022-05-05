@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { FinancialDetailsService } from './financial-details.service';
-import { FinancialDetailRepository } from './repositories/financial-detail.repository';
+import { FinancialDetailRepository } from './financial-detail.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FinancialRepository } from 'src/financials/repositories/financial.repository';
 import { PassportModule } from '@nestjs/passport';

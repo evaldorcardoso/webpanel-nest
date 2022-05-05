@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CompanyRepository } from 'src/companies/repositories/companies.repository';
-import { UserRole } from 'src/users/user-roles.enum';
+import { CompanyRepository } from '../companies/companies.repository';
+import { UserRole } from '../users/user-roles.enum';
 import { CreateFinancialDto } from './dto/create-financial.dto';
 import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
 import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
