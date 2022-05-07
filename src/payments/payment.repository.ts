@@ -3,9 +3,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreatePaymentDto } from '../dto/create-payment.dto';
-import { FindPaymentsQueryDto } from '../dto/find-payments-query.dto';
-import { Payment } from '../entities/payment.entity';
+import { CreatePaymentDto } from './dto/create-payment.dto';
+import { FindPaymentsQueryDto } from './dto/find-payments-query.dto';
+import { Payment } from './payment.entity';
 
 @EntityRepository(Payment)
 export class PaymentRepository extends Repository<Payment> {

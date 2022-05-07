@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from '../auth/roles.guard';
 import { ReturnPaymentDto } from './dto/return-payment.dto';
 import { ReturnFindPaymentsDto } from './dto/return-find-payments.dto';
 import { FindPaymentsQueryDto } from './dto/find-payments-query.dto';
