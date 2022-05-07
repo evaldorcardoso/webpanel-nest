@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Company } from 'src/companies/entities/company.entity';
-import { CompanyRepository } from 'src/companies/repositories/companies.repository';
-import { Financial } from './entities/financial.entity';
+import { Company } from 'src/companies/company.entity';
+import { CompanyRepository } from 'src/companies/companies.repository';
+import { Financial } from './financial.entity';
 import { FinancialsService } from './financials.service';
-import { FinancialRepository } from './repositories/financial.repository';
+import { FinancialRepository } from './financial.repository';
 import { faker } from '@faker-js/faker';
 import { CreateFinancialDto } from './dto/create-financial.dto';
 import { UserRole } from 'src/users/user-roles.enum';

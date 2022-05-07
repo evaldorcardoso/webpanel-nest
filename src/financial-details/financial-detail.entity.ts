@@ -1,4 +1,4 @@
-import { Financial } from '../financials/entities/financial.entity';
+import { Financial } from '../financials/financial.entity';
 import {
   BaseEntity,
   Column,

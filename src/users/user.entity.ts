@@ -11,7 +11,7 @@ import {
   Index,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Financial } from '../financials/entities/financial.entity';
+import { Financial } from '../financials/financial.entity';
 import { UserRole } from './user-roles.enum';
 
 @Entity()

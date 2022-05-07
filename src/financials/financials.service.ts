@@ -9,8 +9,8 @@ import { UserRole } from '../users/user-roles.enum';
 import { CreateFinancialDto } from './dto/create-financial.dto';
 import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
 import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
-import { Financial } from './entities/financial.entity';
-import { FinancialRepository } from './repositories/financial.repository';
+import { Financial } from './financial.entity';
+import { FinancialRepository } from './financial.repository';
 
 @Injectable()
 export class FinancialsService {

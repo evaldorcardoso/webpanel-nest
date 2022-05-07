@@ -3,11 +3,10 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateFinancialDto } from '../dto/create-financial.dto';
-import { FindFinancialsQueryDto } from '../dto/find-financials-query.dto';
-import { ReturnFinancialDto } from '../dto/return-financial.dto';
-import { ReturnFindFinancialsDto } from '../dto/return-find-financials.dto';
-import { Financial } from '../entities/financial.entity';
+import { CreateFinancialDto } from './dto/create-financial.dto';
+import { FindFinancialsQueryDto } from './dto/find-financials-query.dto';
+import { ReturnFindFinancialsDto } from './dto/return-find-financials.dto';
+import { Financial } from './financial.entity';
 
 @EntityRepository(Financial)
 export class FinancialRepository extends Repository<Financial> {

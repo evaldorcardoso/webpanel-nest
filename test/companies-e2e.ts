@@ -13,8 +13,8 @@ import * as request from 'supertest';
 import { CompaniesModule } from '../src/companies/companies.module';
 import { CompanyRepository } from '../src/companies/companies.repository';
 import { Company } from '../src/companies/company.entity';
-import { Financial } from '../src/financials/entities/financial.entity';
-import { FinancialRepository } from '../src/financials/repositories/financial.repository';
+import { Financial } from '../src/financials/financial.entity';
+import { FinancialRepository } from '../src/financials/financial.repository';
 import { FinancialDetail } from '../src/financial-details/financial-detail.entity';
 import { FinancialDetailRepository } from '../src/financial-details/financial-detail.repository';
 

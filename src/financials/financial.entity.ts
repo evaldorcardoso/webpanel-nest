@@ -1,5 +1,5 @@
-import { FinancialDetail } from '../../financial-details/financial-detail.entity';
-import { User } from '../../users/user.entity';
+import { FinancialDetail } from '../financial-details/financial-detail.entity';
+import { User } from '../users/user.entity';
 import {
   BaseEntity,
   Column,

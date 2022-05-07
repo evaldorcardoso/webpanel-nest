@@ -11,8 +11,8 @@ import { UsersModule } from '../src/users/users.module';
 import * as request from 'supertest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { UserRole } from '../src/users/user-roles.enum';
-import { FinancialRepository } from '../src/financials/repositories/financial.repository';
-import { Financial } from '../src/financials/entities/financial.entity';
+import { FinancialRepository } from '../src/financials/financial.repository';
+import { Financial } from '../src/financials/financial.entity';
 import { FinancialDetail } from '../src/financial-details/financial-detail.entity';
 import { FinancialDetailRepository } from '../src/financial-details/financial-detail.repository';
 

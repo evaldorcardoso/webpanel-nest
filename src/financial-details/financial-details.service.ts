@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FinancialRepository } from '../financials/repositories/financial.repository';
+import { FinancialRepository } from '../financials/financial.repository';
 import { CreateFinancialDetailDto } from './dto/create-financial-detail.dto';
 import { FinancialDetailRepository } from './financial-detail.repository';
 

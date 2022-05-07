@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Financial } from '../entities/financial.entity';
+import { Financial } from '../financial.entity';
 
 export class ReturnFinancialDto {
   @ApiProperty()
