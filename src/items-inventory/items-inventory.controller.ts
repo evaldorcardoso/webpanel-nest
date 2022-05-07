@@ -18,16 +18,14 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
-  ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { RolesGuard } from '../auth/roles.guard';
 import { ReturnItemsInventoryDto } from './dto/return-items-inventory.dto';
 import { ReturnItemInventoryDto } from './dto/return-item-inventory.dto';
-import { Role } from 'src/auth/role.decorator';
-import { UserRole } from 'src/users/user-roles.enum';
+import { Role } from '../auth/role.decorator';
+import { UserRole } from '../users/user-roles.enum';
 import { FindItemsInventoryQueryDto } from './dto/find-items-inventory-query.dto';
 
 @ApiTags('Items Inventory')

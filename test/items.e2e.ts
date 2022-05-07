@@ -17,7 +17,7 @@ import { FinancialDetailRepository } from '../src/financial-details/financial-de
 import { ItemRepository } from '../src/items/items.repository';
 import { ItemsModule } from '../src/items/items.module';
 import { Item } from '../src/items/item.entity';
-import { ItemsInventory } from '../src/items-inventory/entities/items-inventory.entity';
+import { ItemsInventory } from '../src/items-inventory/items-inventory.entity';
 
 const DEFAULT_PASSWORD = '@321Abc';
 interface UserDto {

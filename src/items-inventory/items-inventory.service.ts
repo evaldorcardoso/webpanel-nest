@@ -4,8 +4,8 @@ import { CreateItemsInventoryDto } from './dto/create-items-inventory.dto';
 import { FindItemsInventoryQueryDto } from './dto/find-items-inventory-query.dto';
 import { ReturnItemInventoryDto } from './dto/return-item-inventory.dto';
 import { UpdateItemsInventoryDto } from './dto/update-items-inventory.dto';
-import { ItemsInventory } from './entities/items-inventory.entity';
-import { ItemsInventoryRepository } from './repositories/items-inventory.repository';
+import { ItemsInventory } from './items-inventory.entity';
+import { ItemsInventoryRepository } from './items-inventory.repository';
 
 @Injectable()
 export class ItemsInventoryService {

@@ -2,11 +2,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { Item } from 'src/items/entities/item.entity';
+import { Item } from '../items/item.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateItemsInventoryDto } from '../dto/create-items-inventory.dto';
-import { FindItemsInventoryQueryDto } from '../dto/find-items-inventory-query.dto';
-import { ItemsInventory } from '../entities/items-inventory.entity';
+import { CreateItemsInventoryDto } from './dto/create-items-inventory.dto';
+import { FindItemsInventoryQueryDto } from './dto/find-items-inventory-query.dto';
+import { ItemsInventory } from './items-inventory.entity';
 
 @EntityRepository(ItemsInventory)
 export class ItemsInventoryRepository extends Repository<ItemsInventory> {
