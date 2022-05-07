@@ -3,9 +3,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateItemDto } from '../dto/create-item.dto';
-import { FindItemsQueryDto } from '../dto/find-items-query.dto';
-import { Item } from '../entities/item.entity';
+import { CreateItemDto } from './dto/create-item.dto';
+import { FindItemsQueryDto } from './dto/find-items-query.dto';
+import { Item } from './item.entity';
 
 @EntityRepository(Item)
 export class ItemRepository extends Repository<Item> {

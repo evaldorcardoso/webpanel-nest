@@ -1,4 +1,4 @@
-import { ItemsInventory } from 'src/items-inventory/entities/items-inventory.entity';
+import { ItemsInventory } from '../items-inventory/entities/items-inventory.entity';
 import {
   BaseEntity,
   Column,

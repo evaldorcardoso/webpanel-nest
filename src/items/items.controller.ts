@@ -21,9 +21,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Role } from 'src/auth/role.decorator';
-import { UserRole } from 'src/users/user-roles.enum';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from '../auth/role.decorator';
+import { UserRole } from '../users/user-roles.enum';
 import { ReturnItemDto } from './dto/return-item.dto';
 import { ReturnFindItemsDto } from './dto/return-find-items.dto';
 import { FindItemsQueryDto } from './dto/find-items-query.dto';

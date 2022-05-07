@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateItemDto } from './dto/create-item.dto';
 import { FindItemsQueryDto } from './dto/find-items-query.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { Item } from './entities/item.entity';
-import { ItemRepository } from './repositories/items.repository';
+import { Item } from './item.entity';
+import { ItemRepository } from './items.repository';
 
 @Injectable()
 export class ItemsService {
