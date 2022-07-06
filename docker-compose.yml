@@ -7,7 +7,7 @@ services:
     image: 'mysql:8.0'
     ports:
       - "${MYSQL_PORT}:${MYSQL_PORT}"
-    restart: always
+    restart: unless-stopped
     volumes:
       - data:/var/lib/mysql
     environment:

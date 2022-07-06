@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
@@ -17,6 +22,8 @@ import { FinancialDetailsModule } from './financial-details/financial-details.mo
 import { PaymentsModule } from './payments/payments.module';
 import { ItemsModule } from './items/items.module';
 import { ItemsInventoryModule } from './items-inventory/items-inventory.module';
+import { PreauthMiddleware } from './auth/preauth.middleware';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -38,7 +45,7 @@ import { ItemsInventoryModule } from './items-inventory/items-inventory.module';
     ItemsModule,
     ItemsInventoryModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_INTERCEPTOR,
@@ -46,6 +53,12 @@ import { ItemsInventoryModule } from './items-inventory/items-inventory.module';
     },
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PreauthMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
   constructor(private connection: Connection) {}
 }
